@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Moots Flyby</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #08080c; color: #eee; font-family: system-ui, sans-serif; overflow: hidden; }
+  #c { display: block; width: 100vw; height: 100vh; cursor: crosshair; }
+  #overlay {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(8,8,12,0.92); font-size: 18px; letter-spacing: 0.5px;
+    transition: opacity 400ms ease; z-index: 10;
+  }
+  #overlay.hidden { opacity: 0; pointer-events: none; }
+  #hint { position: fixed; right: 12px; bottom: 10px; font-size: 12px; color: #777; z-index: 5; }
+  #controls {
+    position: fixed; top: 12px; left: 12px; z-index: 6;
+    background: rgba(0,0,0,0.45); padding: 8px 10px; border-radius: 6px;
+    font-size: 13px; color: #bbb; display: flex; gap: 6px; align-items: center;
+  }
+  #controls select {
+    background: #1a1a20; color: #eee; border: 1px solid #333;
+    border-radius: 4px; padding: 4px 6px; font-size: 13px;
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.19/dist/lil-gui.esm.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="overlay">Loading 0 / 0 moots…</div>
+<div id="controls">
+  <label for="sort">Sort by</label>
+  <select id="sort">
+    <option value="rank">CSV order (rank / column G)</option>
+    <option value="username">Username (A–Z)</option>
+    <option value="display_name">Display name (A–Z)</option>
+    <option value="match_distance">Match distance (best first)</option>
+    <option value="has_chibi">Has chibi first</option>
+  </select>
+</div>
+<div id="hint">WASD drive · Mouse aim · Click to fire · R restart · Space pause</div>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+# OS
+.DS_Store
+Thumbs.db
+*~
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs
+*.log
+
+# Backups / archives
+*.bak
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Local data artifacts
+data/archive/
+data/batches/
+data/chibi_images/
+data/images/
+data/tags/
+data/grok_js/
+data/UltimMC-Launcher-Linux64
+
+# Local Claude settings
+.claude/settings.local.json
