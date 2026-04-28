@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.twitterapi.io)",
+      "Bash(mkdir -p tags batches)",
+      "Bash(.venv/bin/python -c ' *)",
+      "Write(/home/servus/Programs/getmoots/**)",
+      "Edit(/home/servus/Programs/getmoots/**)",
+      "Read(//tmp/grokjs/**)",
+      "Bash(curl -s https://grok.com/imagine -o imagine.html)"
+    ]
+  }
+}
