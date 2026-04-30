@@ -1,0 +1,117 @@
+# Tight Drift Controls — Handbrake Refactor
+
+## Context
+
+The arcade car in `lib/car/vehicle.js` already has a handbrake/drift mechanism, but it doesn't feel tight. The issue is the physics model: state is `(speed, lateralSpeed)` in body frame, where `lateralSpeed` is set as an additive impulse (`-= steerInput * |speed| * k * dt * 8`) rather than as a true momentum component. When the car rotates mid-drift, the world-space velocity does not rotate with it — the slide feels stuck to the body instead of carrying through space. Lateral bleed on release is also too aggressive (~15/s linear, drains a slide in ~4 frames at 60fps), so you can't hold a slide or countersteer through it. The result is a "strafe while turning" feel rather than the iconic "pointing one way, sliding the other" arcade drift.
+
+The goal: replace the body-frame impulse model with a **world-space velocity vector + asymmetric body-frame grip** model, the standard arcade approach used in Need for Speed / Mario Kart-style controllers. Drift becomes a state where lateral grip drops sharply, the entry is triggered by an edge-detected handbrake tap, and yaw is decoupled from speed so the player can countersteer to hold the slide.
+
+## Approach
+
+**Core change:** in `lib/car/vehicle.js`, replace `this.speed` (scalar) and `this.lateralSpeed` with `this.velocity: THREE.Vector3` (world-space, XZ plane). Each frame: decompose into body-frame `(vf, vl)`, apply engine force to `vf` only, decay `vl` with a grip rate that depends on drift state, then recompose into world space and integrate. Yaw rotates independently — when drifting, yaw steps at a constant `driftYawRate` (decoupled from speed) so countersteer works.
+
+**Backwards compatibility:** keep `vehicle.speed` as a getter/setter. Six external call sites read or write it (see below). The setter rewrites `velocity` to `forward * v + right * vl`, preserving any active slide when collision/state code damps `speed`. No external file changes needed.
+
+**Drift initiation:** hybrid trigger — edge-detect Space transitioning false→true AND `|vf| > driftMinSpeed` AND `|steerInput| > 0.3` to apply a one-shot lateral kick (`-sign(steerInput) * driftEntryKick * |vf|`) that breaks rear grip cleanly. The drift *state* itself stays held-while-Space (so you can hold a slide as long as you want), but the kick gives the snap-in feel.
+
+**Drift exit:** on release after >0.4s of drift, apply a small forward boost (`driftExitBoost * maxSpeed`) — the standard arcade reward for committing to a corner.
+
+## Files to modify
+
+### `lib/car/vehicle.js` (primary, ~165 lines → ~200)
+
+1. **Constructor:**
+   - Replace `this.speed = 0` and `this.lateralSpeed = 0` with `this.velocity = new THREE.Vector3()`.
+   - Add `this.drifting = false`, `this.slipAngle = 0`, `this._eBrakePrev = false`, `this._driftTime = 0`.
+
+2. **Add accessors** (preserves external `speed` reads/writes):
+   ```js
+   get speed() { return this.velocity.dot(this.forward); }
+   set speed(v) {
+     const vl = this.velocity.dot(this._right);
+     this.velocity.copy(this.forward).multiplyScalar(v)
+       .addScaledVector(this._right, vl);
+   }
+   ```
+
+3. **`update(dt, game)`** — rewrite body:
+   - Decompose: `vf = velocity·forward`, `vl = velocity·right`.
+   - Compute `eBrake`, `drifting = eBrake && |vf| >= driftMinSpeed`, `justPressed = eBrake && !_eBrakePrev`.
+   - Apply engine to `vf` (existing accel/brake/opposing-input logic, but on `vf` not `this.speed`).
+   - Coast friction applies **only to `vf`**, not the lateral component (this is the key fix that keeps slides from bleeding during normal driving).
+   - Drift entry kick: if `justPressed && |vf| > driftMinSpeed && |steerInput| > 0.3`, apply `vl -= sign(steerInput) * driftEntryKick * |vf|`.
+   - Lateral decay: `vl *= Math.exp(-(drifting ? driftGripRate : gripRate) * dt)` — exponential is dt-stable, no overshoot, no snap.
+   - Longitudinal drift drag: `vf` decays by `eBrakeLongFriction * |vf| * dt` while drifting (existing config, kept).
+   - Yaw step:
+     - Grip mode: `yaw += steerInput * turnRate * speedFraction * reverseFactor * dt` (unchanged).
+     - Drift mode: `yaw += steerInput * driftYawRate * sign(vf) * dt` (decoupled from speed).
+   - Recompute `forward`, `_right` from new yaw.
+   - Clamp: `|vl| ≤ maxLateralSpeed`, `vf ∈ [-reverseMaxSpeed, fwdCap]`.
+   - Recompose: `velocity = forward * vf + right * vl`.
+   - Drift exit boost: if `!eBrake && _eBrakePrev && _driftTime > 0.4`, add `sign(vf) * driftExitBoost * maxSpeed` to `vf` (then recompose again).
+   - Integrate: `position.addScaledVector(velocity, dt)`.
+   - Update `_eBrakePrev = eBrake`, `_driftTime = drifting ? _driftTime + dt : 0`, `slipAngle = atan2(vl, Math.max(|vf|, 0.01))`.
+
+4. **`reset()`** and **`setPositionYaw()`**: zero `velocity` (replacing the `lateralSpeed = 0` line), set `drifting = false`, `_driftTime = 0`.
+
+### `lib/config.js` — `CAR` block (lines 81–112)
+
+Remove (no longer used):
+- `eBrakeLateralFriction`
+- `driftSteerBoost`
+
+Keep:
+- `eBrakeLongFriction: 0.55`
+- `driftMinSpeed: 8`
+
+Add:
+```js
+gripRate:        8.0,   // lateral velocity decay/sec, normal driving (high = sticky)
+driftGripRate:   1.2,   // lateral decay/sec while drifting (low = holdable slide)
+driftYawRate:    2.6,   // rad/sec, drift-mode yaw rate (speed-independent)
+driftEntryKick:  0.4,   // fraction of |vf| applied as one-shot lateral on entry
+driftExitBoost:  0.08,  // fraction of maxSpeed added forward on drift release
+maxLateralSpeed: 38,    // ~0.7 * maxSpeed, |vl| clamp
+```
+
+These are starting values calibrated to the existing scale (`maxSpeed: 55`, `accel: 45`, `turnRate: 1.9`); expect to tune by feel during playtest.
+
+## External call sites — no changes needed
+
+Confirmed via grep. `vehicle.speed` is read/written by:
+- `main.js:517` (truck velocity for AI), `main.js:685, 696, 712` (ram thresholds, boost smash multiplier) — read
+- `lib/entities/moots.js:99` (ram threshold) — read
+- `lib/game/state.js:230` (`speed *= 0.95`), `:281` (`speed = 0`) — write
+- `lib/car/collision.js:22-44, 102` (wall/boundary bounce damp) — read/write
+
+The getter/setter pair handles all of these transparently. Collision damping on `speed` will damp only the longitudinal component, which is the correct behavior — lateral momentum survives a glancing wall hit, just like real life.
+
+`vehicle.lateralSpeed` is **not** read externally (verified). Drop the field entirely.
+
+## Optional follow-ups (not in this plan, but unlocked by it)
+
+- `playerSprite.js` can read `vehicle.drifting` and `vehicle.slipAngle` for a tilted/leaning frame during slides.
+- Tire smoke / skid streak FX gated on `vehicle.drifting`.
+- HUD drift-meter using `slipAngle`.
+
+## Verification
+
+Manual playtest checklist (run `python -m http.server` from project root, open `index.html`, drive around):
+
+1. **Drift entry:** Build to ~40 u/s, hold A or D to turn, tap Space — nose should snap into the steer direction with a clear "break" feel; car holds the slide for ~1–2 s without further input.
+2. **Hold the slide:** With Space held, modulate steer left/right — the slide angle changes responsively; releasing steer keeps the slide going (momentum carries) instead of snapping straight.
+3. **Drift exit:** Release Space after >0.5 s of slide — lateral velocity bleeds smoothly over ~0.5–1 s (no snap), and you should feel a small forward bump.
+4. **Below threshold:** Tap Space at <8 u/s — nothing happens (driftMinSpeed gate). No twitchy entry at low speed.
+5. **Wall hit mid-drift:** Slide into a building corner — `collision.js` damps `speed` (longitudinal), but the lateral component should persist briefly so the car kisses off rather than dead-stopping. No NaN, no teleport.
+6. **Rewind during drift (Q):** Hold a slide, then rewind — vehicle scrubs cleanly along the recorded path; on rewind release, velocity is zero (matches existing behavior).
+7. **Reverse:** Reverse at speed, tap Space — drift should not engage with backward yaw flip (the `sign(vf)` guard on the drift yaw step prevents this; verify the nose doesn't whip the wrong way).
+8. **Boost interaction:** Hold Shift to boost, then drift — `fwdCap` is `maxSpeed * BOOST.speedMult` so boost-drifts go faster but otherwise behave identically.
+
+Add a temporary HUD readout (top-left, dev only) showing `vf`, `vl`, `slipAngle (deg)`, `drifting`, `_driftTime` while tuning. Remove before commit.
+
+## Out of scope
+
+- Physics-engine refactor (no Cannon/Ammo introduction — this stays as kinematic arcade math).
+- Wheel/Ackermann simulation.
+- Surface-dependent grip (gravel, ice, etc.).
+- Multiplayer determinism concerns.
