@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Moots Flyby</title>
 <style>
   html, body { margin: 0; height: 100%; background: #08080c; color: #eee; font-family: system-ui, sans-serif; overflow: hidden; }
@@ -13,15 +14,99 @@
   }
   #overlay.hidden { opacity: 0; pointer-events: none; }
   #hint { position: fixed; right: 12px; bottom: 10px; font-size: 12px; color: #777; z-index: 5; }
-  #controls {
-    position: fixed; top: 12px; left: 12px; z-index: 6;
-    background: rgba(0,0,0,0.45); padding: 8px 10px; border-radius: 6px;
-    font-size: 13px; color: #bbb; display: flex; gap: 6px; align-items: center;
+  #build-version { position: fixed; left: 12px; bottom: 10px; font-size: 12px; color: #777; z-index: 5; }
+
+  /* ── Virtual joystick (touch devices only) ─────────────────────────── */
+  #joy-shell {
+    display: none;
+    position: fixed; left: 24px; bottom: 24px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,255,255,0.18);
+    z-index: 20; touch-action: none;
   }
-  #controls select {
-    background: #1a1a20; color: #eee; border: 1px solid #333;
-    border-radius: 4px; padding: 4px 6px; font-size: 13px;
+  #joy-knob {
+    position: absolute; top: 50%; left: 50%;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.28);
+    border: 2px solid rgba(255,255,255,0.45);
+    transform: translate(-50%, -50%); pointer-events: none;
   }
+  @media (pointer: coarse) {
+    #joy-shell { display: block; }
+    #hint { display: none; }
+  }
+
+  /* ── Pause / settings menu ──────────────────────────────────────────── */
+  #pause-menu {
+    display: none;
+    position: fixed; inset: 0; z-index: 50;
+    align-items: center; justify-content: center;
+    background: rgba(8,8,12,0.82);
+    backdrop-filter: blur(3px);
+  }
+  #pause-menu.open { display: flex; }
+  #pause-panel {
+    background: #101018;
+    border: 1px solid #2a2a38;
+    border-radius: 10px;
+    width: min(480px, 92vw);
+    max-height: 85vh;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    color: #ddd; font-size: 14px;
+  }
+  #pause-tabs {
+    display: flex; border-bottom: 1px solid #2a2a38;
+  }
+  .pause-tab {
+    flex: 1; padding: 10px 0; text-align: center;
+    cursor: pointer; color: #888; background: none; border: none;
+    font-size: 13px; letter-spacing: 0.5px; font-family: inherit;
+    transition: color 120ms, background 120ms;
+  }
+  .pause-tab:hover { color: #ccc; background: rgba(255,255,255,0.04); }
+  .pause-tab.active { color: #fff; border-bottom: 2px solid #5af; margin-bottom: -1px; }
+  #pause-body { overflow-y: auto; flex: 1; padding: 18px 20px; }
+
+  #pause-resume {
+    display: block; width: 100%; padding: 10px 0;
+    background: #1e3a5f; border: 1px solid #3a6a9f;
+    border-radius: 6px; color: #9df; font-size: 15px;
+    cursor: pointer; font-family: inherit; letter-spacing: 0.5px;
+    transition: background 120ms;
+  }
+  #pause-resume:hover { background: #254875; }
+
+  /* Keybindings table */
+  .kb-table { width: 100%; border-collapse: collapse; }
+  .kb-table th {
+    text-align: left; color: #666; font-weight: normal;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
+    padding: 0 0 8px 0;
+  }
+  .kb-table td { padding: 5px 0; vertical-align: middle; }
+  .kb-table td:first-child { color: #aaa; width: 55%; }
+  .kb-row-group td {
+    padding-top: 12px; color: #555;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px;
+  }
+  .kb-chip {
+    display: inline-block; background: #1e2030; border: 1px solid #333;
+    border-radius: 4px; padding: 2px 8px; font-family: monospace;
+    font-size: 13px; min-width: 36px; text-align: center; cursor: pointer;
+    transition: border-color 120ms, background 120ms;
+  }
+  .kb-chip:hover { border-color: #5af; background: #1a2540; }
+  .kb-chip.capturing { border-color: #fa0; background: #2a1e00; color: #fa0; }
+  .kb-reset-row { margin-top: 16px; text-align: right; }
+  .kb-reset-all {
+    background: none; border: 1px solid #333; border-radius: 4px;
+    color: #666; font-size: 12px; padding: 4px 10px; cursor: pointer;
+    font-family: inherit; transition: color 120ms, border-color 120ms;
+  }
+  .kb-reset-all:hover { color: #ccc; border-color: #888; }
 </style>
 <script type="importmap">
 {
@@ -35,17 +120,36 @@
 <body>
 <canvas id="c"></canvas>
 <div id="overlay">Loading 0 / 0 moots…</div>
-<div id="controls">
-  <label for="sort">Sort by</label>
-  <select id="sort">
-    <option value="rank">CSV order (rank / column G)</option>
-    <option value="username">Username (A–Z)</option>
-    <option value="display_name">Display name (A–Z)</option>
-    <option value="match_distance">Match distance (best first)</option>
-    <option value="has_chibi">Has chibi first</option>
-  </select>
+<div id="hint">WASD / Arrow keys drive · Mouse aim · Click to fire · R restart · Esc menu</div>
+
+<!-- ── Pause / settings menu ──────────────────────────────────────── -->
+<div id="pause-menu" role="dialog" aria-modal="true" aria-label="Game menu">
+  <div id="pause-panel">
+    <div id="pause-tabs">
+      <button class="pause-tab active" data-tab="resume-tab">Resume</button>
+      <button class="pause-tab"        data-tab="bindings-tab">Keybindings</button>
+    </div>
+    <div id="pause-body">
+      <!-- Resume pane -->
+      <div id="resume-tab">
+        <button id="pause-resume">▶  Resume</button>
+      </div>
+      <!-- Keybindings pane -->
+      <div id="bindings-tab" style="display:none">
+        <table class="kb-table">
+          <thead><tr><th>Action</th><th>Key</th></tr></thead>
+          <tbody id="kb-tbody"><!-- populated by pauseMenu.js --></tbody>
+        </table>
+        <div class="kb-reset-row">
+          <button class="kb-reset-all" id="kb-reset-all">Reset all to defaults</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<div id="hint">WASD drive · Mouse aim · Click to fire · R restart · Space pause</div>
+
+<div id="build-version">build: __BUILD_TIME__</div>
+<div id="joy-shell"><div id="joy-knob"></div></div>
 <script type="module" src="./main.js"></script>
 </body>
 </html>

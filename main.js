@@ -6,25 +6,33 @@ import { Pistol } from './lib/weapons/pistol.js';
 import { clearMootProjectiles } from './lib/entities/moots.js';
 import { createRecorder } from './lib/rewind/recorder.js';
 import { createPlayback } from './lib/rewind/playback.js';
-import { createHud, updateHud, hideLoginPrompt, registerHudSlot, setHudSlot, removeHudSlot } from './lib/hud/overlays.js';
+import { createHud, updateHud, hideLoginPrompt, registerHudSlot, setHudSlot, removeHudSlot, updateTargetHud, setGameOverVisible } from './lib/hud/overlays.js';
 import { getMe, postQueue } from './lib/api.js';
-import { createMirror, setFace } from './lib/hud/mirror.js';
+import { createMirror, setFace, setReactionImage, setReactionImages, getMirrorCanvas, getMirrorSize } from './lib/hud/mirror.js';
+import { createSpeedLines, setSpeedLinesActive } from './lib/hud/speedLines.js';
 import { setupDebugPanel } from './lib/debug/panel.js';
 import { Mouse } from './lib/mouse.js';
-import { WORLD, MOOT, GAME, MIRROR, CITY } from './lib/config.js';
+import { TouchInput } from './lib/input/touch.js';
+import { Bindings } from './lib/input/bindings.js';
+import { PauseMenu } from './lib/ui/pauseMenu.js';
+import { WORLD, MOOT, GAME, CITY, NPC_VEHICLE, TARGET, BOOST, MIRROR } from './lib/config.js';
+import { loadAllVehicleTextures } from './lib/assets/vehicleTextures.js';
+import { createPlayerSprite } from './lib/car/playerSprite.js';
 import { createImpactSystem } from './lib/game/impacts.js';
 import { createGameState } from './lib/game/state.js';
 import { generateCity } from './lib/world/city/generator.js';
 import { createPopulation } from './lib/world/population.js';
-import { createRadar } from './lib/hud/radar.js';
-import { createBossPortrait } from './lib/hud/portrait.js';
-import { createLevelManager, pickPlayerSpawn, pickBossSpawn, pickBossRow } from './lib/game/levels.js';
+import { createMinimap } from './lib/hud/minimap.js';
+import { createTargetMarker } from './lib/entities/targetMarker.js';
+import { createNpcVehiclePool } from './lib/entities/npcVehiclePool.js';
+import { destroyNpcVehicle, startNpcSpin } from './lib/entities/npcVehicle.js';
+import { createLevelManager, pickPlayerSpawn } from './lib/game/levels.js';
 import { tickPerception } from './lib/ai/perception.js';
 import { tickUnaware } from './lib/ai/ambient.js';
 import { tickFlee } from './lib/ai/flee.js';
 import { tickArmed } from './lib/ai/armed.js';
 import { tickRecovery } from './lib/ai/recovery.js';
-import { tickBoss } from './lib/ai/boss.js';
+import { createRadio } from './lib/hud/radio.js';
 
 // ── Scene setup ───────────────────────────────────────────────────────────────
 
@@ -57,6 +65,7 @@ const recorder     = createRecorder();
 const impactSystem = createImpactSystem(scene);
 
 let buildingAABBs = [];
+let buildingGrid  = null;
 let navGrid       = null;
 let interestPoints = [];
 let population    = null;
@@ -65,21 +74,59 @@ let db            = null;
 let cityBounds    = null;  // { minX, maxX, minZ, maxZ } — set after each buildCity call
 
 let isBuilding       = false;  // guard against concurrent buildCity calls
-let victoryTimeoutId = null;   // pending level-transition timeout (so R-key can cancel it)
+let playerSprite     = null;   // player car sprite (third-person)
+let npcVehiclePool   = null;   // pool of NPC vehicles
+let targetMarker     = null;   // ground ring under the current target moot
+let minimap          = null;   // minimap replacing the old radar
 
-let radar         = null;
-let portrait      = null;
 let playback      = null;
+let radio         = null;  // radio system (3 channels)
 let paused        = false;
 let noclip        = false;
 let lastTime      = 0;
+let wasBoosting   = false;
+
+// Rearview mirror renderer/camera — populated by setupRearview() once the
+// mirror DOM exists. The mirror camera sits just above the player and looks
+// in the opposite direction the vehicle is facing.
+let rearRenderer = null;
+let rearCamera   = null;
+const _rearLook  = new THREE.Vector3();
+
+function setupRearview() {
+  const mc = getMirrorCanvas();
+  if (!mc) return;
+  rearRenderer = new THREE.WebGLRenderer({ canvas: mc, antialias: true });
+  rearRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const ms = getMirrorSize();
+  rearRenderer.setSize(ms.width, ms.height, false);
+  rearRenderer.setClearColor(WORLD.clearColor, 1);
+  rearCamera = new THREE.PerspectiveCamera(60, ms.width / ms.height, 0.1, 1000);
+  rearCamera.rotation.order = 'YXZ';
+  scene.add(rearCamera);
+}
+
+function renderRearview() {
+  if (!rearRenderer || !rearCamera) return;
+  // Position: at the vehicle, slightly elevated.
+  rearCamera.position.set(vehicle.position.x, vehicle.position.y + 2.2, vehicle.position.z);
+  // Look opposite the vehicle's forward — i.e. behind the truck.
+  _rearLook.set(
+    vehicle.position.x - vehicle.forward.x * 30,
+    vehicle.position.y + 1.5,
+    vehicle.position.z - vehicle.forward.z * 30,
+  );
+  rearCamera.lookAt(_rearLook);
+  rearRenderer.render(scene, rearCamera);
+}
 
 // ── Shared context fed to all AI tick functions each frame ────────────────────
 
 // Updated every frame before AI dispatch.
 let aiCtx = {
-  navGrid:       null,
-  buildingAABBs: [],
+  navGrid:        null,
+  buildingAABBs:  [],
+  buildingGrid:   null,
   interestPoints: [],  // set once per city-build, not per frame
   truckPos:      { x: 0, z: 0 },
   truckVelX:     0,
@@ -161,6 +208,7 @@ function clearAiProjectiles() {
 
 const gs = createGameState({
   scene,
+  camera,
   vehicle,
   recorder,
   getPlayback:      () => playback,
@@ -176,23 +224,48 @@ const gs = createGameState({
     if (pos) {
       aiCtx.recentKills.push({ x: pos.x, z: pos.z, at: performance.now() });
     }
+    // If the target was killed by a non-targeting path (e.g. direct shot without
+    // wasTarget tracking), ensure the target ring is immediately cleared.
+    // designateNewTarget() is called from onTargetHit, which is the main path;
+    // this handles any edge-case where targetHandle went stale but wasn't reassigned.
+    if (handle === game.targetHandle) {
+      game.targetHandle = null;
+      if (targetMarker) targetMarker.detach();
+      designateNewTarget();
+    }
   },
-  onVictoryTimeout(id) {
-    // Store so buildCity can clearTimeout before it fires.
-    victoryTimeoutId = id;
+  onVictoryTimeout(_id) {
+    // Boss system removed — no-op.
   },
-  onVictory({ charge, capacitors }) {
-    // Level transition: rebuild city with incremented seed.
-    startNextLevel(charge, capacitors);
+  onVictory(_carry) {
+    // Boss system removed — no-op.
   },
   onRestart() {
     // Gameover "Press R" button: rebuild from same seed.
     buildCity(levelManager.currentSeed).catch(console.error);
   },
+  onTargetChanged(handle) {
+    // Reattach the ground ring to the new target.
+    if (targetMarker) {
+      if (handle) targetMarker.attach(handle);
+      else targetMarker.detach();
+    }
+  },
+  onNpcVehicleShot(npcHandle) {
+    // Shoot-to-delete NPC vehicle: destroy it, award score, and grant ammo.
+    if (!npcHandle.alive) return;
+    destroyNpcVehicle(npcHandle);
+    game.score += NPC_VEHICLE.scoreShot;
+    // Shooting an NPC grants the same ammo as a boost-ram destroy.
+    game.charge = Math.min(GAME.maxAmmo, game.charge + BOOST.ammoOnDestroy);
+    updateHud(game);
+    if (npcVehiclePool) npcVehiclePool.respawnAfterDelay(npcHandle, NPC_VEHICLE.respawnDelayMs);
+  },
 });
 
-const { game, triggerRewind, ramMoots, tryShoot: _legacyTryShoot,
-        tickCrashCooldown, onRewindDone, onMootBulletHit,
+const { game, ramMoots, tryShoot: _legacyTryShoot,
+        tickCrashCooldown, tickTimer, designateNewTarget,
+        onRewindDone, onMootBulletHit,
         setCurrentPlayer } = gs;
 
 // Wrap tryShoot to also record the shot event for perception (recentShots).
@@ -211,23 +284,23 @@ function tryShoot(aim) {
  * Disposes previous city geometry and population.
  *
  * @param {number} seed
- * @param {{ charge: number, capacitors: number } | null} carryOver — ammo to preserve
  */
-async function buildCity(seed, carryOver = null) {
+async function buildCity(seed) {
   if (isBuilding) return;   // drop concurrent calls
   isBuilding = true;
 
-  // Cancel any pending victory-timeout level transition.
-  if (victoryTimeoutId !== null) {
-    clearTimeout(victoryTimeoutId);
-    victoryTimeoutId = null;
-  }
+  // Destroy previous player sprite (it will be re-created below after scene clear).
+  if (playerSprite) { playerSprite.destroy(); playerSprite = null; }
 
   overlay.classList.remove('hidden');
   overlay.textContent = 'Generating city…';
 
   // Dispose old population.
   if (population) population.destroyAll();
+  // Destroy old NPC vehicles.
+  if (npcVehiclePool) npcVehiclePool.destroyAll();
+  // Destroy old target marker.
+  if (targetMarker) { targetMarker.destroy(); targetMarker = null; }
   clearAiProjectiles();
   clearMootProjectiles(scene);
   aiCtx.recentKills.length = 0;
@@ -244,26 +317,29 @@ async function buildCity(seed, carryOver = null) {
   // Generate city (navGrid is built inside generateCity).
   const city = generateCity({ scene, seed });
   buildingAABBs  = city.buildingAABBs;
+  buildingGrid   = city.buildingGrid;
   interestPoints = city.interestPoints;
   navGrid        = city.navGrid;
   cityBounds     = city.bounds;        // store per-level; used by resolveMapBounds each frame
 
   aiCtx.navGrid        = navGrid;
   aiCtx.buildingAABBs  = buildingAABBs;
+  aiCtx.buildingGrid   = buildingGrid;
   aiCtx.interestPoints = city.interestPoints;
   aiCtx.spawnProjectile = makeSpawnProjectile(scene);
 
-  // Pick spawn positions.
+  // Pick player spawn.
   const playerSpawn = pickPlayerSpawn(city.bounds, interestPoints);
-  const bossSpawnPt = pickBossSpawn(playerSpawn, city.bounds, navGrid);
 
   // Place vehicle at player spawn.
   vehicle.reset();
   vehicle.setPositionYaw(playerSpawn.x, playerSpawn.z, 0);
 
-  // Pick boss row (avoiding recent).
-  const bossRow = pickBossRow(db, (id) => levelManager.avoidsBossRow(String(id)));
-  levelManager.markBossRow(String(bossRow.id));
+  // Re-create player sprite for the new city.
+  playerSprite = createPlayerSprite(scene);
+
+  // Re-create target marker.
+  targetMarker = createTargetMarker(scene);
 
   // Create population manager.
   population = createPopulation({
@@ -275,24 +351,27 @@ async function buildCity(seed, carryOver = null) {
   });
 
   overlay.textContent = 'Loading moot textures…';
-  await population.loadTextures();
+  // Hard cap: never hang more than 15 s waiting for textures. Any still-loading
+  // video will fall back to a placeholder when it eventually resolves.
+  await Promise.race([
+    population.loadTextures(),
+    new Promise(r => setTimeout(r, 15000)),
+  ]);
 
   // Boot population in ring around player (fire-and-forget — not async).
   population.boot(playerSpawn);
 
-  // Spawn boss.
-  const bossHandle = population.spawnBoss(bossRow, bossSpawnPt);
+  // Spawn NPC vehicle fleet on road waypoints.
+  npcVehiclePool = createNpcVehiclePool({ scene, navGrid });
 
-  // Carry over ammo / capacitors from previous level.
-  if (carryOver) {
-    game.charge     = carryOver.charge;
-    game.capacitors = carryOver.capacitors;
-  } else {
-    game.charge     = GAME.startCharge;
-    game.capacitors = 0;
-  }
-  game.health    = GAME.maxHealth;
-  game.state     = 'playing';
+  game.charge     = GAME.startAmmo;
+  game.capacitors = 0;
+  game.health     = 0;          // truck is invincible
+  game.state      = 'playing';
+  game.score      = 0;
+  game.timeRemaining    = TARGET.startTimeS;
+  game.targetCountdown  = TARGET.targetCountdownS;
+  game.combo      = 1;
   game.mootsAlive = POP_STANDING_COUNT;
   game.mootsTotal = POP_STANDING_COUNT;
 
@@ -301,27 +380,24 @@ async function buildCity(seed, carryOver = null) {
     playback = createPlayback(scene, vehicle);
   }
 
-  // Update the debug __vxm handle.
-  if (window.__vxm) {
-    window.__vxm.mootHandles = population.getHandles();
-  }
-
   recorder.reset();
   impactSystem.clearImpacts();
 
   isBuilding = false;  // release guard
   overlay.classList.add('hidden');
+  setGameOverVisible(false);
   updateHud(game);
-  if (portrait) portrait.update(population.getBossHandle());
+  // Update minimap city layer now that bounds and road data are available.
+  if (minimap) minimap.buildCityLayer(city.bounds, city.roadSegments, city.buildingAABBs);
+  // Designate the first target.
+  designateNewTarget();
 }
 
 // Approximate constant for moot counter (not critical after population takes over).
 const POP_STANDING_COUNT = 60;
 
-async function startNextLevel(charge, capacitors) {
-  const newSeed = levelManager.nextSeed();
-  await buildCity(newSeed, { charge, capacitors });
-}
+// startNextLevel removed — no boss, no level transitions.
+
 
 /** Remove all city-generated Mesh/Group children from the scene.
  * Disposes geometry and materials on all Mesh descendants to free GPU memory.
@@ -332,7 +408,7 @@ function _clearCityMeshes() {
   const toRemove = [];
   for (const obj of scene.children) {
     if (obj === camera) continue;
-    if (obj.userData && (obj.userData.isPistol || obj.userData.isImpact || obj.userData.isBullet)) continue;
+    if (obj.userData && (obj.userData.isPistol || obj.userData.isImpact || obj.userData.isBullet || obj.userData.isPlayerSprite || obj.userData.isNpcVehicle || obj.userData.isTargetMarker)) continue;
     toRemove.push(obj);
   }
   for (const o of toRemove) {
@@ -361,6 +437,7 @@ async function main() {
       overlay.textContent = 'Loading moot db…';
       return await loadDb();
     })(),
+    loadAllVehicleTextures(),
     (async () => {
       const player = await getMe();
       setCurrentPlayer(player);
@@ -386,11 +463,20 @@ async function main() {
   // Create HUD components.
   createHud();
   createMirror();
+  createSpeedLines();
   setupDebugPanel({ pistol, moot: MOOT });
 
-  // Create radar and portrait.
-  radar    = createRadar();
-  portrait = createBossPortrait();
+  // Set up the rearview mirror's WebGL renderer and camera.
+  setupRearview();
+
+  // Create minimap (replaces old radar).
+  minimap  = createMinimap();
+  // No boss portrait.
+
+  // Create radio. Discover music files asynchronously; playback starts on the
+  // first user gesture (browsers block autoplay until then).
+  radio = createRadio();
+  radio.loadAll().catch(console.error);
 
   // Build first city.
   await buildCity(initialSeed);
@@ -407,6 +493,11 @@ async function main() {
     registerHudSlot,
     setHudSlot,
     removeHudSlot,
+    // Reaction-panel image helpers (bottom-right face widget).
+    setReactionImage,
+    setReactionImages,
+    // Radio (cycle channels, set volume, reload track lists).
+    radio,
   };
 
   lastTime = performance.now();
@@ -419,7 +510,10 @@ function tickAI(dt) {
   if (!population || !navGrid) return null;
 
   const now = performance.now();
-  const truckPos = { x: vehicle.position.x, z: vehicle.position.z };
+  // Mutate the shared truckPos object instead of allocating a new {x,z} every frame.
+  aiCtx.truckPos.x = vehicle.position.x;
+  aiCtx.truckPos.z = vehicle.position.z;
+  const truckPos = aiCtx.truckPos;
   const truckVelX = vehicle.speed * Math.sin(vehicle.yaw);
   const truckVelZ = vehicle.speed * Math.cos(vehicle.yaw);
 
@@ -446,7 +540,7 @@ function tickAI(dt) {
 
   // Update shared context (per-frame fields only — navGrid, buildingAABBs,
   // interestPoints and spawnProjectile are set once per city-build in buildCity).
-  aiCtx.truckPos   = truckPos;
+  // truckPos is already updated above (in-place mutation of aiCtx.truckPos).
   aiCtx.truckVelX  = truckVelX;
   aiCtx.truckVelZ  = truckVelZ;
   aiCtx.now        = now;
@@ -455,12 +549,6 @@ function tickAI(dt) {
 
   for (const m of handles) {
     if (!m.alive) continue;
-
-    if (m.isBoss) {
-      // Boss AI — distinct pipeline.
-      tickBoss(dt, m, aiCtx);
-      continue;
-    }
 
     // Regular moot pipeline: perception → behavior tick.
     tickPerception(dt, m, aiCtx);
@@ -487,19 +575,30 @@ function tickAI(dt) {
   // Population manager tick (despawn/respawn at POP.tickHz).
   population.tick(dt, truckPos);
 
-  // Keep game.mootsAlive in sync with the actual live count (includes boss).
-  // This ensures the HUD doesn't decay to 0 as moots respawn.
-  game.mootsAlive = population.activeCount + (population.getBossHandle()?.alive ? 1 : 0);
+  // Keep game.mootsAlive in sync with the actual live count.
+  game.mootsAlive = population.activeCount;
 
-  // Update radar.
-  if (radar) {
-    radar.update(truckPos, vehicle.yaw, handles);
+  // Update minimap (replaces old radar).
+  if (minimap) {
+    const npcHandles = npcVehiclePool ? npcVehiclePool.getHandles() : [];
+    minimap.update(
+      truckPos, vehicle.yaw,
+      handles,
+      npcHandles,
+      game.targetHandle,
+      dt,
+    );
   }
 
-  // Update boss portrait.
-  if (portrait) {
-    portrait.update(population.getBossHandle());
+  // Tick NPC vehicles.
+  if (npcVehiclePool) {
+    // camera.rotation.order = 'YXZ' (set at scene init), so .y is the horizontal yaw
+    // after applyChaseCamera's lookAt() call — use this for directional sprite selection.
+    npcVehiclePool.tick(dt, camera.rotation.y);
   }
+
+  // Tick target marker animation.
+  if (targetMarker) targetMarker.tick(dt);
 
   // Return the handles array so the caller can pass it to ramMoots,
   // avoiding a second getMootHandles() allocation.
@@ -521,43 +620,115 @@ function tick(now) {
       const done = playback.update(dt);
 
       if (playback.isScrubbing()) {
+        // Rewind scrub: camera tracks vehicle in first-person mode (no control).
         vehicle.applyToCamera(camera);
       } else {
-        vehicle.update(dt);
-        if (!noclip) resolveBuildingCollisions(vehicle, buildingAABBs);
+        vehicle.update(dt, game);
+        if (!noclip) resolveBuildingCollisions(vehicle, buildingGrid ?? buildingAABBs);
         if (!noclip) resolveMapBounds(vehicle, cityBounds);
-        vehicle.applyToCamera(camera);
+        if (playerSprite) playerSprite.update(vehicle);
+        vehicle.applyChaseCamera(camera);
       }
 
       window.__vxmMouse = Mouse;
       camera.updateMatrixWorld(true);
       const aim = impactSystem.pickAimPoint(camera, Mouse);
       pistol.aimAt(aim.point);
-      if (Mouse.consumeClick()) tryShoot(aim);
+      if (Mouse.consumeClick() || TouchInput.consumeTap()) tryShoot(aim);
       pistol.update(dt);
       impactSystem.updateImpacts(dt);
       updateHud(game);
       renderer.render(scene, camera);
+      renderRearview();
       if (done) onRewindDone();
     }
     return;
   }
 
   // ── Victory / gameover: only render, don't tick AI ───────────────────────
-  if (paused || (game.state !== 'playing')) {
+  if (paused || PauseMenu.isOpen || (game.state !== 'playing')) {
     Mouse.consumeClick();
+    TouchInput.consumeTap();
     renderer.render(scene, camera);
+    renderRearview();
     return;
   }
 
   // ── Normal playing tick ───────────────────────────────────────────────────
 
-  vehicle.update(dt);
+  // (PauseMenu.isOpen check above covers the frozen-menu case)
+
+  // ── Boost state: Shift + ammo ─────────────────────────────────────────────
+  // Computed before vehicle.update so the speed cap is already correct this frame.
+  {
+    const wantBoost = Bindings.isAction('boost');
+    const hasAmmo   = game.charge > BOOST.minAmmo;
+    game.boosting   = wantBoost && hasAmmo;
+    if (game.boosting) {
+      game.charge = Math.max(0, game.charge - BOOST.costPerSec * dt);
+      // If draining to zero, immediately deactivate
+      if (game.charge <= 0) game.boosting = false;
+    }
+    if (game.boosting !== wasBoosting) {
+      if (game.boosting) {
+        setFace('turbo');
+        setSpeedLinesActive(true);
+      } else {
+        setFace('neutral');
+        setSpeedLinesActive(false);
+      }
+      wasBoosting = game.boosting;
+    }
+  }
+
+  vehicle.update(dt, game);
   const preSpeed = Math.abs(vehicle.speed);
-  const hit = noclip ? null : resolveBuildingCollisions(vehicle, buildingAABBs);
+  const hit = noclip ? null : resolveBuildingCollisions(vehicle, buildingGrid ?? buildingAABBs);
   if (!noclip) resolveMapBounds(vehicle, cityBounds);
   tickCrashCooldown(dt, hit, preSpeed);
-  vehicle.applyToCamera(camera);
+  // Tick the game timer (ends game at 0).
+  tickTimer(dt);
+
+  // Check NPC vehicle ram collisions.
+  if (npcVehiclePool) {
+    const npcHandles = npcVehiclePool.getHandles();
+    const rSq = (NPC_VEHICLE.ramRadius + 1.8) * (NPC_VEHICLE.ramRadius + 1.8);
+    if (Math.abs(vehicle.speed) >= NPC_VEHICLE.ramMinSpeed) {
+      for (const nh of npcHandles) {
+        if (!nh.alive || nh.spinning) continue;
+        const dx = nh.position.x - vehicle.position.x;
+        const dz = nh.position.z - vehicle.position.z;
+        if (dx * dx + dz * dz < rSq) {
+          if (game.boosting) {
+            // ── Boost collision: instant destroy + spin-away + ammo reward ──
+            const dist = Math.sqrt(dx * dx + dz * dz) || 1;
+            startNpcSpin(nh, dx / dist, dz / dist);
+            game.charge = Math.min(GAME.maxAmmo, game.charge + BOOST.ammoOnDestroy);
+            game.score += NPC_VEHICLE.scoreRam;
+            npcVehiclePool.respawnAfterDelay(nh, NPC_VEHICLE.respawnDelayMs);
+            // Player keeps full speed while boosting — no slowdown.
+          } else {
+            // ── Smash collision: player slows, NPC survives ──
+            vehicle.speed *= BOOST.smashSpeedMult;
+            setFace('angry', MIRROR.angryMs);
+            // NPC vehicle just bounces slightly — stays alive.
+          }
+          updateHud(game);
+        }
+      }
+    }
+  }
+
+  // Update player sprite position / frame (must happen before applyChaseCamera
+  // so the sprite position is set before the camera moves to look at it).
+  if (playerSprite) playerSprite.update(vehicle);
+
+  // Third-person chase camera (after sprite update so lookAt is stable).
+  vehicle.applyChaseCamera(camera);
+
+  // ── matrix must be updated before AI tick so raycasts and AI using camera
+  //    world-pos get consistent values. One call per frame (after applyChaseCamera).
+  camera.updateMatrixWorld(true);
 
   // AI dispatch (perception, behaviors, boss, bullets, population, HUD).
   // Returns the handles array so ramMoots can reuse it without a second getHandles() call.
@@ -570,35 +741,49 @@ function tick(now) {
   recorder.tick(dt, vehicle);
 
   window.__vxmMouse = Mouse;
-  camera.updateMatrixWorld(true);
+  // camera.updateMatrixWorld already called above; pick aim from current state.
   const aim = impactSystem.pickAimPoint(camera, Mouse);
   pistol.aimAt(aim.point);
-  if (Mouse.consumeClick()) tryShoot(aim);
+  if (Mouse.consumeClick() || TouchInput.consumeTap()) tryShoot(aim);
 
   pistol.update(dt);
   impactSystem.updateImpacts(dt);
   updateHud(game);
+  // Update directional arrow / target countdown HUD each frame.
+  if (game.targetHandle && game.targetHandle.group) {
+    updateTargetHud(game, camera, game.targetHandle.group.position);
+  } else {
+    updateTargetHud(game, camera, null);
+  }
+  if (radio) radio.tick(dt);
   renderer.render(scene, camera);
+  renderRearview();
 }
 
 // ── Keyboard shortcuts ────────────────────────────────────────────────────────
 
 window.addEventListener('keydown', (e) => {
-  if (e.code === 'KeyR') {
+  // Escape / menu key: delegate to PauseMenu (it handles both open and close).
+  if (Bindings.matches('menu', e.code)) {
+    e.preventDefault();
+    if (!PauseMenu.isOpen && game.state === 'playing') {
+      PauseMenu.open();
+    }
+    // Close is handled inside pauseMenu.js capture-phase listener.
+    return;
+  }
+
+  // Block game hotkeys while the menu is open.
+  if (PauseMenu.isOpen) return;
+
+  if (Bindings.matches('restart', e.code)) {
     if (game.state === 'gameover' || game.state === 'victory') {
-      // Restart: full rebuild from same seed (resets all AI, positions, population).
       buildCity(levelManager.currentSeed).catch(console.error);
     } else {
       vehicle.reset();
     }
-  } else if (e.code === 'KeyQ' && game.state === 'playing') {
-    if (game.capacitors > 0) {
-      triggerRewind();
-    } else {
-      setFace('angry', MIRROR.angryMs);
-    }
-  } else if (e.code === 'Space' && game.state === 'playing') {
-    paused = !paused;
+  } else if (Bindings.matches('radio', e.code)) {
+    if (radio) radio.cycleChannel();
   } else if (e.code === 'KeyG' && e.ctrlKey) {
     e.preventDefault();
     noclip = !noclip;

@@ -1,0 +1,7 @@
+services:
+  web:
+    build: .                    # Builds using your Dockerfile
+    container_name: my-static-site
+    ports:
+      - "8090:80"               # Access your site at http://localhost:8080
+    restart: unless-stopped     # Auto restart if it crashes
