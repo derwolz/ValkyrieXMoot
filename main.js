@@ -43,9 +43,24 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight, false);
 renderer.setClearColor(WORLD.clearColor, 1);
+// Required for GLB textures (sRGB colormap) to display at correct brightness.
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(WORLD.clearColor, WORLD.fogNear, WORLD.fogFar);
+
+// Scene lighting — added for the GLB-based city kits and forward-compatible
+// with the 3D vehicle models in issues #2 / #3. Existing MeshBasicMaterial
+// surfaces (roads, sprite materials, fog plane) ignore lights, so this
+// doesn't change anything that was already in the scene.
+// Intensities mirror crazy-cabbie's known-good values for Kenney kits.
+const _hemi = new THREE.HemisphereLight(0xc0e4ff, 0x556b2f, 0.5);
+scene.add(_hemi);
+const _ambient = new THREE.AmbientLight(0xffe9c2, 0.55);
+scene.add(_ambient);
+const _sun = new THREE.DirectionalLight(0xfff0d0, 1.6);
+_sun.position.set(220, 280, 160);
+scene.add(_sun);
 
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
 camera.rotation.order = 'YXZ';
@@ -315,7 +330,16 @@ async function buildCity(seed) {
   _clearCityMeshes();
 
   // Generate city (navGrid is built inside generateCity).
-  const city = generateCity({ scene, seed });
+  // First call awaits Kenney prefab kit preload; subsequent rebuilds resolve immediately.
+  overlay.textContent = 'Loading city kits…';
+  const city = await generateCity({
+    scene,
+    seed,
+    onProgress: ({ kit, loaded, total }) => {
+      overlay.textContent = `Loading ${kit} kit ${loaded} / ${total}…`;
+    },
+  });
+  overlay.textContent = 'Generating city…';
   buildingAABBs  = city.buildingAABBs;
   buildingGrid   = city.buildingGrid;
   interestPoints = city.interestPoints;
@@ -412,9 +436,12 @@ function _clearCityMeshes() {
     toRemove.push(obj);
   }
   for (const o of toRemove) {
-    // Recursively dispose geometry and material on all Mesh descendants.
+    // Recursively dispose geometry and material on all Mesh descendants —
+    // EXCEPT meshes that share resources with module-cached GLB prefabs
+    // (userData.sharedAsset). Disposing those would break subsequent
+    // rebuilds because the cache hands out clones of the same geometry.
     o.traverse((child) => {
-      if (child.isMesh) {
+      if (child.isMesh && !child.userData?.sharedAsset) {
         if (child.geometry) child.geometry.dispose();
         if (child.material) {
           if (Array.isArray(child.material)) {
