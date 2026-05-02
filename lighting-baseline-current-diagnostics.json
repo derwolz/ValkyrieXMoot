@@ -1,0 +1,1247 @@
+{
+  "step": "lighting-baseline-current",
+  "capturedAt": "2026-05-01T05:25:12.263Z",
+  "url": "http://127.0.0.1:4173/index.html",
+  "httpStatus": 200,
+  "screenshotPath": "ValkyrieXMoot/lighting-baseline-current.png",
+  "navigationError": null,
+  "readyError": null,
+  "renderFailures": {
+    "pageErrors": [],
+    "unexpectedResourceFailures": [],
+    "unexpectedConsoleErrors": [],
+    "navigationError": null,
+    "readyError": null
+  },
+  "knownNonFatalResourceFailures": [
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/auth/me",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-auth"
+    }
+  ],
+  "knownNonFatalConsoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civBus_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civBus_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civBus_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civBus_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civBus_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civCar2_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civCar2_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civCar2_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civCar2_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civCar2_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4173/auth/me",
+        "lineNumber": 0,
+        "columnNumber": 0
+      },
+      "classification": "known-nonfatal-auth"
+    }
+  ],
+  "allResourceIssues": [
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_front.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_back.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_sideRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_backRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_frontRight.png",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-asset"
+    },
+    {
+      "url": "http://127.0.0.1:4173/auth/me",
+      "status": 404,
+      "statusText": "File not found",
+      "classification": "known-nonfatal-auth"
+    }
+  ],
+  "page": {
+    "href": "http://127.0.0.1:4173/index.html",
+    "title": "Moots Flyby",
+    "overlay": {
+      "text": "Warming moot textures…",
+      "className": "hidden",
+      "hidden": true
+    },
+    "canvas": {
+      "width": 1280,
+      "height": 720,
+      "clientWidth": 1280,
+      "clientHeight": 720
+    },
+    "diagnostics": {
+      "generatedAt": "2026-05-01T05:25:11.973Z",
+      "skyboxMode": "day",
+      "renderer": {
+        "outputColorSpace": "srgb",
+        "outputEncoding": 3001,
+        "toneMapping": 0,
+        "toneMappingExposure": 8,
+        "physicallyCorrectLights": null,
+        "useLegacyLights": false,
+        "clearColor": "#b8dcff",
+        "pixelRatio": 1,
+        "size": [
+          1280,
+          720
+        ]
+      },
+      "rearRenderer": {
+        "outputColorSpace": "srgb",
+        "outputEncoding": 3001,
+        "toneMapping": 0,
+        "toneMappingExposure": 8,
+        "physicallyCorrectLights": null,
+        "useLegacyLights": false,
+        "clearColor": "#b8dcff",
+        "pixelRatio": 1,
+        "size": [
+          436,
+          111
+        ]
+      },
+      "fog": {
+        "color": "#b8dcff",
+        "near": 1000000,
+        "far": 10000000,
+        "density": null
+      },
+      "background": {
+        "type": 1009,
+        "uuid": "fb160e01-e215-4910-8b01-87498a68d55e"
+      },
+      "lights": [
+        {
+          "name": "vxm-emergency-ambient-light",
+          "type": "AmbientLight",
+          "uuid": "8281bd21-8485-43ad-a592-5535df30e417",
+          "visible": true,
+          "intensity": 40,
+          "color": "#ffffff",
+          "groundColor": null,
+          "position": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "vxm-emergency-fill-light",
+          "type": "HemisphereLight",
+          "uuid": "79d36c95-fb28-4cfc-852f-04bbac4f2b62",
+          "visible": true,
+          "intensity": 35,
+          "color": "#ffffff",
+          "groundColor": "#ffffff",
+          "position": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "vxm-emergency-sun-light",
+          "type": "DirectionalLight",
+          "uuid": "847b6be8-176f-44ca-b35e-ecb387c3f7ad",
+          "visible": true,
+          "intensity": 50,
+          "color": "#ffffff",
+          "groundColor": null,
+          "position": [
+            0.45,
+            1,
+            0.25
+          ]
+        }
+      ],
+      "worldSystems": {
+        "hasTerrain": true,
+        "hasOcean": true,
+        "hasHighway": true,
+        "hasPark": true,
+        "buildingAabbCount": 8436
+      },
+      "meshes": {
+        "building": {
+          "meshCount": 11,
+          "instancedMeshCount": 11,
+          "instanceCount": 16773,
+          "visibleMeshCount": 11,
+          "invisibleMeshCount": 0,
+          "materialRoles": {
+            "side": 4,
+            "roof": 4,
+            "boundary-ridge": 1,
+            "boundary-side": 1,
+            "boundary-roof": 1
+          },
+          "materials": [
+            {
+              "meshes": 4,
+              "instances": 8243,
+              "material": {
+                "name": "building-side-bucket-0",
+                "type": "MeshLambertMaterial",
+                "role": "side",
+                "boundaryType": null,
+                "color": "#ffffff",
+                "emissive": "#000000",
+                "map": {
+                  "uuid": "feadf303-62ca-470e-aa3d-1238c7eca195",
+                  "name": null,
+                  "source": null
+                },
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": 1242
+              }
+            },
+            {
+              "meshes": 4,
+              "instances": 8243,
+              "material": {
+                "name": "building-roof-bucket-0",
+                "type": "MeshLambertMaterial",
+                "role": "roof",
+                "boundaryType": null,
+                "color": "#4e5663",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": 1242
+              }
+            },
+            {
+              "meshes": 1,
+              "instances": 99,
+              "material": {
+                "name": "building-boundary-mountain-ridges",
+                "type": "MeshLambertMaterial",
+                "role": "boundary-ridge",
+                "boundaryType": "mountainRidges",
+                "color": "#5f6670",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": 99
+              }
+            },
+            {
+              "meshes": 1,
+              "instances": 94,
+              "material": {
+                "name": "building-boundary-oversized-sides",
+                "type": "MeshLambertMaterial",
+                "role": "boundary-side",
+                "boundaryType": "oversizedBuildings",
+                "color": "#ffffff",
+                "emissive": "#000000",
+                "map": {
+                  "uuid": "e099ded2-08fd-4dbe-b44d-1f1239c8b22e",
+                  "name": null,
+                  "source": null
+                },
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": 94
+              }
+            },
+            {
+              "meshes": 1,
+              "instances": 94,
+              "material": {
+                "name": "building-boundary-oversized-roofs",
+                "type": "MeshLambertMaterial",
+                "role": "boundary-roof",
+                "boundaryType": "oversizedBuildingRoofs",
+                "color": "#4e5663",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": 94
+              }
+            }
+          ]
+        },
+        "terrain": {
+          "meshCount": 1,
+          "instancedMeshCount": 0,
+          "instanceCount": 0,
+          "visibleMeshCount": 1,
+          "invisibleMeshCount": 0,
+          "materialRoles": {
+            "unlabeled": 1
+          },
+          "materials": [
+            {
+              "meshes": 1,
+              "instances": 0,
+              "material": {
+                "name": "terrain-surface",
+                "type": "MeshLambertMaterial",
+                "role": null,
+                "boundaryType": null,
+                "color": "#ffffff",
+                "emissive": "#000000",
+                "map": {
+                  "uuid": "8576f3be-7910-47ff-84e8-f63e34b5e528",
+                  "name": null,
+                  "source": null
+                },
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": null
+              }
+            }
+          ]
+        },
+        "park": {
+          "meshCount": 931,
+          "instancedMeshCount": 3,
+          "instanceCount": 12998,
+          "visibleMeshCount": 77,
+          "invisibleMeshCount": 854,
+          "materialRoles": {
+            "trunk": 1,
+            "canopy": 1,
+            "bench": 1,
+            "path": 928
+          },
+          "materials": [
+            {
+              "meshes": 1,
+              "instances": 5216,
+              "material": {
+                "name": "park-trunk",
+                "type": "MeshLambertMaterial",
+                "role": "trunk",
+                "boundaryType": null,
+                "color": "#6b4a2b",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": false,
+                "instanceCount": 5216
+              }
+            },
+            {
+              "meshes": 1,
+              "instances": 5216,
+              "material": {
+                "name": "park-canopy",
+                "type": "MeshLambertMaterial",
+                "role": "canopy",
+                "boundaryType": null,
+                "color": "#2f6b2f",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": false,
+                "instanceCount": 5216
+              }
+            },
+            {
+              "meshes": 1,
+              "instances": 2566,
+              "material": {
+                "name": "park-bench",
+                "type": "MeshLambertMaterial",
+                "role": "bench",
+                "boundaryType": null,
+                "color": "#7a4f2a",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": false,
+                "instanceCount": 2566
+              }
+            },
+            {
+              "meshes": 851,
+              "instances": 0,
+              "material": {
+                "name": "park-path",
+                "type": "MeshLambertMaterial",
+                "role": "path",
+                "boundaryType": null,
+                "color": "#8a7f62",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": true,
+                "opacity": 0.78,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": false,
+                "instanceCount": null
+              }
+            },
+            {
+              "meshes": 77,
+              "instances": 0,
+              "material": {
+                "name": "park-path",
+                "type": "MeshLambertMaterial",
+                "role": "path",
+                "boundaryType": null,
+                "color": "#8a7f62",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": true,
+                "opacity": 0.78,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": true,
+                "instanceCount": null
+              }
+            }
+          ]
+        },
+        "highway": {
+          "meshCount": 2,
+          "instancedMeshCount": 0,
+          "instanceCount": 0,
+          "visibleMeshCount": 0,
+          "invisibleMeshCount": 2,
+          "materialRoles": {
+            "road": 1,
+            "barrier": 1
+          },
+          "materials": [
+            {
+              "meshes": 1,
+              "instances": 0,
+              "material": {
+                "name": "highway-road",
+                "type": "MeshLambertMaterial",
+                "role": "road",
+                "boundaryType": null,
+                "color": "#1a1a1f",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": false,
+                "instanceCount": null
+              }
+            },
+            {
+              "meshes": 1,
+              "instances": 0,
+              "material": {
+                "name": "highway-barrier",
+                "type": "MeshLambertMaterial",
+                "role": "barrier",
+                "boundaryType": null,
+                "color": "#6b6b70",
+                "emissive": "#000000",
+                "map": null,
+                "transparent": false,
+                "opacity": 1,
+                "toneMapped": true,
+                "wireframe": false,
+                "side": 0,
+                "visible": false,
+                "instanceCount": null
+              }
+            }
+          ]
+        }
+      }
+    },
+    "materialSummaries": {
+      "building": {
+        "meshCount": 11,
+        "instancedMeshCount": 11,
+        "instanceCount": 16773,
+        "visibleMeshCount": 11,
+        "invisibleMeshCount": 0,
+        "materialRoles": {
+          "side": 4,
+          "roof": 4,
+          "boundary-ridge": 1,
+          "boundary-side": 1,
+          "boundary-roof": 1
+        },
+        "materials": [
+          {
+            "meshes": 4,
+            "instances": 8243,
+            "material": {
+              "name": "building-side-bucket-0",
+              "type": "MeshLambertMaterial",
+              "role": "side",
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "feadf303-62ca-470e-aa3d-1238c7eca195",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 1242
+            }
+          },
+          {
+            "meshes": 4,
+            "instances": 8243,
+            "material": {
+              "name": "building-roof-bucket-0",
+              "type": "MeshLambertMaterial",
+              "role": "roof",
+              "boundaryType": null,
+              "color": "#4e5663",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 1242
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 99,
+            "material": {
+              "name": "building-boundary-mountain-ridges",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-ridge",
+              "boundaryType": "mountainRidges",
+              "color": "#5f6670",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 99
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 94,
+            "material": {
+              "name": "building-boundary-oversized-sides",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-side",
+              "boundaryType": "oversizedBuildings",
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "e099ded2-08fd-4dbe-b44d-1f1239c8b22e",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 94
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 94,
+            "material": {
+              "name": "building-boundary-oversized-roofs",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-roof",
+              "boundaryType": "oversizedBuildingRoofs",
+              "color": "#4e5663",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 94
+            }
+          }
+        ]
+      },
+      "terrain": {
+        "meshCount": 1,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "visibleMeshCount": 1,
+        "invisibleMeshCount": 0,
+        "materialRoles": {
+          "unlabeled": 1
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "terrain-surface",
+              "type": "MeshLambertMaterial",
+              "role": null,
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "8576f3be-7910-47ff-84e8-f63e34b5e528",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": null
+            }
+          }
+        ]
+      },
+      "park": {
+        "meshCount": 931,
+        "instancedMeshCount": 3,
+        "instanceCount": 12998,
+        "visibleMeshCount": 77,
+        "invisibleMeshCount": 854,
+        "materialRoles": {
+          "trunk": 1,
+          "canopy": 1,
+          "bench": 1,
+          "path": 928
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 5216,
+            "material": {
+              "name": "park-trunk",
+              "type": "MeshLambertMaterial",
+              "role": "trunk",
+              "boundaryType": null,
+              "color": "#6b4a2b",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 5216
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 5216,
+            "material": {
+              "name": "park-canopy",
+              "type": "MeshLambertMaterial",
+              "role": "canopy",
+              "boundaryType": null,
+              "color": "#2f6b2f",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 5216
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 2566,
+            "material": {
+              "name": "park-bench",
+              "type": "MeshLambertMaterial",
+              "role": "bench",
+              "boundaryType": null,
+              "color": "#7a4f2a",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 2566
+            }
+          },
+          {
+            "meshes": 851,
+            "instances": 0,
+            "material": {
+              "name": "park-path",
+              "type": "MeshLambertMaterial",
+              "role": "path",
+              "boundaryType": null,
+              "color": "#8a7f62",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": true,
+              "opacity": 0.78,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          },
+          {
+            "meshes": 77,
+            "instances": 0,
+            "material": {
+              "name": "park-path",
+              "type": "MeshLambertMaterial",
+              "role": "path",
+              "boundaryType": null,
+              "color": "#8a7f62",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": true,
+              "opacity": 0.78,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": null
+            }
+          }
+        ]
+      },
+      "highway": {
+        "meshCount": 2,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "visibleMeshCount": 0,
+        "invisibleMeshCount": 2,
+        "materialRoles": {
+          "road": 1,
+          "barrier": 1
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "highway-road",
+              "type": "MeshLambertMaterial",
+              "role": "road",
+              "boundaryType": null,
+              "color": "#1a1a1f",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "highway-barrier",
+              "type": "MeshLambertMaterial",
+              "role": "barrier",
+              "boundaryType": null,
+              "color": "#6b6b70",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          }
+        ]
+      }
+    },
+    "pixelStats": {
+      "width": 1280,
+      "height": 720,
+      "averageRgb": {
+        "r": 164.253583984375,
+        "g": 167.12576063368056,
+        "b": 182.49725260416668
+      },
+      "averageLuma": 171.29219907407406,
+      "brightPixelRatio": 0.384013671875,
+      "blackPixelRatio": 0.005005425347222222,
+      "darkPixelRatio": 0.039635416666666666,
+      "colorfulPixelRatio": 0.15358723958333334,
+      "saturatedPixelRatio": 0.075537109375
+    },
+    "pixelStatsSource": "playwright screenshot png"
+  }
+}

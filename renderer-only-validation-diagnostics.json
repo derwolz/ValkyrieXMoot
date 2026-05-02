@@ -1,0 +1,1271 @@
+{
+  "step": "renderer-only-validation",
+  "url": "http://127.0.0.1:4183/index.html",
+  "httpStatus": 200,
+  "capturedAt": "2026-05-01T05:29:22.209Z",
+  "screenshotPath": "/home/clankie/workspace/ValkyrieXMoot/renderer-only-validation.png",
+  "pixelStats": {
+    "width": 1280,
+    "height": 720,
+    "averageRgb": {
+      "r": 116.046,
+      "g": 131.758,
+      "b": 131.626
+    },
+    "averageLuma": 128.408,
+    "brightPixelsPercent": 26.786,
+    "blackPixelsPercent": 0.329,
+    "darkPixelsPercent": 5.137,
+    "colorfulPixelsPercent": 26.607,
+    "saturatedPixelsPercent": 0.083
+  },
+  "diagnostics": {
+    "generatedAt": "2026-05-01T05:29:06.390Z",
+    "skyboxMode": "day",
+    "renderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 1,
+      "physicallyCorrectLights": null,
+      "useLegacyLights": false,
+      "clearColor": "#b8dcff",
+      "pixelRatio": 1,
+      "size": [
+        1280,
+        720
+      ]
+    },
+    "rearRenderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 1,
+      "physicallyCorrectLights": null,
+      "useLegacyLights": false,
+      "clearColor": "#b8dcff",
+      "pixelRatio": 1,
+      "size": [
+        436,
+        111
+      ]
+    },
+    "fog": {
+      "color": "#b8dcff",
+      "near": 1000000,
+      "far": 10000000,
+      "density": null
+    },
+    "background": {
+      "type": 1009,
+      "uuid": "769d64c7-bf82-4b95-956b-21991cd64329"
+    },
+    "lights": [
+      {
+        "name": "vxm-emergency-ambient-light",
+        "type": "AmbientLight",
+        "uuid": "4f9bd1b9-7a85-4647-ade5-bc64627dc7b3",
+        "visible": true,
+        "intensity": 40,
+        "color": "#ffffff",
+        "groundColor": null,
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "vxm-emergency-fill-light",
+        "type": "HemisphereLight",
+        "uuid": "f91af8d1-3cde-473b-bdfb-520bc40f61f6",
+        "visible": true,
+        "intensity": 35,
+        "color": "#ffffff",
+        "groundColor": "#ffffff",
+        "position": [
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "name": "vxm-emergency-sun-light",
+        "type": "DirectionalLight",
+        "uuid": "a68ae2be-0715-424c-a89a-f7c11829cdf4",
+        "visible": true,
+        "intensity": 50,
+        "color": "#ffffff",
+        "groundColor": null,
+        "position": [
+          0.45,
+          1,
+          0.25
+        ]
+      }
+    ],
+    "worldSystems": {
+      "hasTerrain": true,
+      "hasOcean": true,
+      "hasHighway": true,
+      "hasPark": true,
+      "buildingAabbCount": 8436
+    },
+    "meshes": {
+      "building": {
+        "meshCount": 11,
+        "instancedMeshCount": 11,
+        "instanceCount": 16773,
+        "visibleMeshCount": 11,
+        "invisibleMeshCount": 0,
+        "materialRoles": {
+          "side": 4,
+          "roof": 4,
+          "boundary-ridge": 1,
+          "boundary-side": 1,
+          "boundary-roof": 1
+        },
+        "materials": [
+          {
+            "meshes": 4,
+            "instances": 8243,
+            "material": {
+              "name": "building-side-bucket-0",
+              "type": "MeshLambertMaterial",
+              "role": "side",
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "1f8cf918-075d-482d-a698-bde02cc8bdd9",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 1242
+            }
+          },
+          {
+            "meshes": 4,
+            "instances": 8243,
+            "material": {
+              "name": "building-roof-bucket-0",
+              "type": "MeshLambertMaterial",
+              "role": "roof",
+              "boundaryType": null,
+              "color": "#4e5663",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 1242
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 99,
+            "material": {
+              "name": "building-boundary-mountain-ridges",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-ridge",
+              "boundaryType": "mountainRidges",
+              "color": "#5f6670",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 99
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 94,
+            "material": {
+              "name": "building-boundary-oversized-sides",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-side",
+              "boundaryType": "oversizedBuildings",
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "3aa4810c-363f-4172-a179-73b74ce02a9f",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 94
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 94,
+            "material": {
+              "name": "building-boundary-oversized-roofs",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-roof",
+              "boundaryType": "oversizedBuildingRoofs",
+              "color": "#4e5663",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 94
+            }
+          }
+        ]
+      },
+      "terrain": {
+        "meshCount": 1,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "visibleMeshCount": 1,
+        "invisibleMeshCount": 0,
+        "materialRoles": {
+          "unlabeled": 1
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "terrain-surface",
+              "type": "MeshLambertMaterial",
+              "role": null,
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "d1dd2fbf-68fa-419a-839d-7c1d3d7838a3",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": null
+            }
+          }
+        ]
+      },
+      "park": {
+        "meshCount": 931,
+        "instancedMeshCount": 3,
+        "instanceCount": 12998,
+        "visibleMeshCount": 53,
+        "invisibleMeshCount": 878,
+        "materialRoles": {
+          "trunk": 1,
+          "canopy": 1,
+          "bench": 1,
+          "path": 928
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 5216,
+            "material": {
+              "name": "park-trunk",
+              "type": "MeshLambertMaterial",
+              "role": "trunk",
+              "boundaryType": null,
+              "color": "#6b4a2b",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 5216
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 5216,
+            "material": {
+              "name": "park-canopy",
+              "type": "MeshLambertMaterial",
+              "role": "canopy",
+              "boundaryType": null,
+              "color": "#2f6b2f",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 5216
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 2566,
+            "material": {
+              "name": "park-bench",
+              "type": "MeshLambertMaterial",
+              "role": "bench",
+              "boundaryType": null,
+              "color": "#7a4f2a",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 2566
+            }
+          },
+          {
+            "meshes": 875,
+            "instances": 0,
+            "material": {
+              "name": "park-path",
+              "type": "MeshLambertMaterial",
+              "role": "path",
+              "boundaryType": null,
+              "color": "#8a7f62",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": true,
+              "opacity": 0.78,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          },
+          {
+            "meshes": 53,
+            "instances": 0,
+            "material": {
+              "name": "park-path",
+              "type": "MeshLambertMaterial",
+              "role": "path",
+              "boundaryType": null,
+              "color": "#8a7f62",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": true,
+              "opacity": 0.78,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": null
+            }
+          }
+        ]
+      },
+      "highway": {
+        "meshCount": 2,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "visibleMeshCount": 0,
+        "invisibleMeshCount": 2,
+        "materialRoles": {
+          "road": 1,
+          "barrier": 1
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "highway-road",
+              "type": "MeshLambertMaterial",
+              "role": "road",
+              "boundaryType": null,
+              "color": "#1a1a1f",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "highway-barrier",
+              "type": "MeshLambertMaterial",
+              "role": "barrier",
+              "boundaryType": null,
+              "color": "#6b6b70",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          }
+        ]
+      }
+    }
+  },
+  "validation": {
+    "materiallyDark": false,
+    "pageErrorCount": 0,
+    "knownNonFatalFailureCount": 21,
+    "unexpectedFailureCount": 0,
+    "knownNonFatalConsoleMessageCount": 33,
+    "unexpectedResourceFailureCount": 0,
+    "unexpectedConsoleMessageCount": 0
+  },
+  "pageErrors": [],
+  "knownNonFatalFailures": [
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck_front.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck_back.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck_frontRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck_sideRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civBus_back.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civBus_front.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civBus_frontRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civBus_backRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck_backRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civBus_sideRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civCar2_front.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civCar2_back.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civCar2_frontRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civCar2_sideRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civCar2_backRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_front.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_back.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_backRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_frontRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_sideRight.png",
+      "status": 404,
+      "statusText": "File not found"
+    },
+    {
+      "url": "http://127.0.0.1:4183/auth/me",
+      "status": 404,
+      "statusText": "File not found"
+    }
+  ],
+  "unexpectedFailures": [],
+  "rawFailures": {
+    "resourceFailures": [],
+    "httpFailures": [
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4183/auth/me",
+        "status": 404,
+        "statusText": "File not found"
+      }
+    ],
+    "consoleErrors": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck_front.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck_back.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck_frontRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck_sideRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civBus_back.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civBus_front.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civBus_frontRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civBus_backRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck_backRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civBus_sideRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civCar2_front.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civCar2_back.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civCar2_frontRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civCar2_sideRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civCar2_backRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_front.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_back.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_backRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_frontRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_sideRight.png",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+        "location": {
+          "url": "http://127.0.0.1:4183/auth/me",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x57c0014b600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+        "location": {
+          "url": "http://127.0.0.1:4183/index.html",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x57c00152800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+        "location": {
+          "url": "http://127.0.0.1:4183/index.html",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30969,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30983,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30969,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30983,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x57c0014b600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+        "location": {
+          "url": "http://127.0.0.1:4183/index.html",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30969,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30983,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30969,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+        "location": {
+          "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "lineNumber": 30983,
+          "columnNumber": 10
+        }
+      },
+      {
+        "type": "warning",
+        "text": "[.WebGL-0x57c00152800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)",
+        "location": {
+          "url": "http://127.0.0.1:4183/index.html",
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      }
+    ]
+  },
+  "knownNonFatalConsoleMessages": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civBus_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civCar2_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_front.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_back.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_backRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_frontRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/data/vehicles/civTruck2_sideRight.png",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "location": {
+        "url": "http://127.0.0.1:4183/auth/me",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x57c0014b600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+      "location": {
+        "url": "http://127.0.0.1:4183/index.html",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x57c00152800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+      "location": {
+        "url": "http://127.0.0.1:4183/index.html",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30969,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30983,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30969,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30983,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x57c0014b600]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+      "location": {
+        "url": "http://127.0.0.1:4183/index.html",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30969,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30983,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: Property .outputEncoding has been removed. Use .outputColorSpace instead.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30969,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "THREE.WebGLRenderer: The property .useLegacyLights has been deprecated. Migrate your lighting according to the following guide: https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.",
+      "location": {
+        "url": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "lineNumber": 30983,
+        "columnNumber": 10
+      }
+    },
+    {
+      "type": "warning",
+      "text": "[.WebGL-0x57c00152800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)",
+      "location": {
+        "url": "http://127.0.0.1:4183/index.html",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ]
+}
