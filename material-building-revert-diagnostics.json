@@ -1,0 +1,286 @@
+{
+  "httpStatus": 200,
+  "pageErrors": [],
+  "response404s": [
+    "http://127.0.0.1:4173/data/vehicles/civTruck_front.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck_back.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck_frontRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck_sideRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck_backRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civBus_frontRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civBus_front.png",
+    "http://127.0.0.1:4173/data/vehicles/civBus_back.png",
+    "http://127.0.0.1:4173/data/vehicles/civBus_backRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civBus_sideRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civCar2_front.png",
+    "http://127.0.0.1:4173/data/vehicles/civCar2_back.png",
+    "http://127.0.0.1:4173/data/vehicles/civCar2_frontRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civCar2_backRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civCar2_sideRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck2_back.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck2_front.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck2_sideRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck2_frontRight.png",
+    "http://127.0.0.1:4173/data/vehicles/civTruck2_backRight.png",
+    "http://127.0.0.1:4173/auth/me"
+  ],
+  "diagnostics": {
+    "renderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 8
+    },
+    "fog": {
+      "near": 1000000,
+      "far": 10000000,
+      "color": "#b8dcff"
+    },
+    "lights": [
+      {
+        "type": "AmbientLight",
+        "intensity": 40,
+        "visible": true,
+        "color": "#ffffff"
+      },
+      {
+        "type": "HemisphereLight",
+        "intensity": 35,
+        "visible": true,
+        "color": "#ffffff"
+      },
+      {
+        "type": "DirectionalLight",
+        "intensity": 50,
+        "visible": true,
+        "color": "#ffffff"
+      }
+    ],
+    "building": {
+      "meshCount": 11,
+      "totalInstances": 16773,
+      "objects": [
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "side",
+          "bucket": 0,
+          "instanceCount": 1242,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-side-bucket-0",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": true,
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "roof",
+          "bucket": 0,
+          "instanceCount": 1242,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-roof-bucket-0",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": false,
+              "color": "#4e5663"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "side",
+          "bucket": 1,
+          "instanceCount": 1612,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-side-bucket-1",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": true,
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "roof",
+          "bucket": 1,
+          "instanceCount": 1612,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-roof-bucket-1",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": false,
+              "color": "#4e5663"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "side",
+          "bucket": 2,
+          "instanceCount": 1831,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-side-bucket-2",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": true,
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "roof",
+          "bucket": 2,
+          "instanceCount": 1831,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-roof-bucket-2",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": false,
+              "color": "#4e5663"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "side",
+          "bucket": 3,
+          "instanceCount": 3558,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-side-bucket-3",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": true,
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "roof",
+          "bucket": 3,
+          "instanceCount": 3558,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": null,
+          "materials": [
+            {
+              "name": "building-roof-bucket-3",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": false,
+              "color": "#4e5663"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "boundary-ridge",
+          "bucket": null,
+          "instanceCount": 99,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": "mountainRidges",
+          "materials": [
+            {
+              "name": "building-boundary-mountain-ridges",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": false,
+              "color": "#5f6670"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "boundary-side",
+          "bucket": null,
+          "instanceCount": 94,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": "oversizedBuildings",
+          "materials": [
+            {
+              "name": "building-boundary-oversized-sides",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": true,
+              "color": "#ffffff"
+            }
+          ]
+        },
+        {
+          "name": "",
+          "type": "Mesh",
+          "role": "boundary-roof",
+          "bucket": null,
+          "instanceCount": 94,
+          "diagnosticCategory": "building",
+          "isBuildingInstanced": true,
+          "boundaryType": "oversizedBuildingRoofs",
+          "materials": [
+            {
+              "name": "building-boundary-oversized-roofs",
+              "type": "MeshLambertMaterial",
+              "toneMapped": true,
+              "hasMap": false,
+              "color": "#4e5663"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "pixelStats": {
+    "width": 1280,
+    "height": 720,
+    "avgRgb": [
+      155.03710286458335,
+      210.18779296875,
+      208.25068033854166
+    ],
+    "brightRatio": 0.5899609375,
+    "blackRatio": 0.004427083333333333
+  }
+}

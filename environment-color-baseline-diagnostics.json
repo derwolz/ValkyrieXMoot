@@ -1,0 +1,321 @@
+{
+  "label": "environment-color-baseline",
+  "capturedAt": "2026-05-01T13:49:06.630Z",
+  "url": "http://127.0.0.1:4184/index.html",
+  "screenshotPath": "/home/clankie/workspace/ValkyrieXMoot/environment-color-baseline.png",
+  "mainResponse": {
+    "status": 200,
+    "url": "http://127.0.0.1:4184/index.html"
+  },
+  "failures": {
+    "pageErrors": [],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ],
+    "knownNonfatalResourceFailures": [
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civBus_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civBus_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civBus_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civBus_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civBus_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civCar2_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civCar2_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civCar2_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civCar2_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civCar2_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck2_front.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck2_back.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck2_backRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck2_frontRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/data/vehicles/civTruck2_sideRight.png",
+        "status": 404,
+        "statusText": "File not found"
+      },
+      {
+        "url": "http://127.0.0.1:4184/auth/me",
+        "status": 404,
+        "statusText": "File not found"
+      }
+    ],
+    "unexpectedResourceFailures": []
+  },
+  "pixelStats": {
+    "width": 1280,
+    "height": 720,
+    "pixelCount": 921600,
+    "averageRgb": {
+      "r": 59.22905056423611,
+      "g": 60.19334743923611,
+      "b": 66.31374565972222
+    },
+    "brightPixelRatio": 0.03303168402777778,
+    "blackPixelRatio": 0.06773871527777778,
+    "colorfulPixelRatio": 0.17402235243055555
+  },
+  "diagnostics": {
+    "generatedAt": "2026-05-01T13:48:54.978Z",
+    "skyboxMode": "day",
+    "renderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 1,
+      "physicallyCorrectLights": null,
+      "useLegacyLights": false,
+      "clearColor": "#b8dcff",
+      "pixelRatio": 1,
+      "size": [
+        1280,
+        720
+      ]
+    },
+    "rearRenderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 1,
+      "physicallyCorrectLights": null,
+      "useLegacyLights": false,
+      "clearColor": "#b8dcff",
+      "pixelRatio": 1,
+      "size": [
+        436,
+        111
+      ]
+    },
+    "fog": {
+      "color": "#b8dcff",
+      "near": 90,
+      "far": 850,
+      "density": null
+    },
+    "background": {
+      "type": 1009,
+      "uuid": "119ef8b8-e436-4990-868c-9fdae36f0117"
+    },
+    "lights": [
+      {
+        "name": "vxm-skybox-ambient-light",
+        "type": "AmbientLight",
+        "uuid": "2f218f1f-2ad5-4ffa-ad64-fd9547c91eff",
+        "visible": true,
+        "intensity": 0.85,
+        "color": "#dde8ff",
+        "groundColor": null,
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "vxm-skybox-fill-light",
+        "type": "HemisphereLight",
+        "uuid": "e5f10a5c-6249-4753-b50b-6126b4c56abd",
+        "visible": true,
+        "intensity": 0.7,
+        "color": "#b8dcff",
+        "groundColor": "#7c8794",
+        "position": [
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "name": "vxm-skybox-sun-light",
+        "type": "DirectionalLight",
+        "uuid": "135006a5-7031-4eb0-94fb-a2a33d141f11",
+        "visible": true,
+        "intensity": 1.8,
+        "color": "#fff3d0",
+        "groundColor": null,
+        "position": [
+          0.45,
+          1,
+          0.25
+        ]
+      }
+    ],
+    "worldSystems": {
+      "hasTerrain": true,
+      "hasOcean": true,
+      "hasHighway": true,
+      "hasPark": true,
+      "buildingAabbCount": 8436
+    },
+    "materials": {
+      "building": {
+        "meshCount": 11,
+        "visibleMeshCount": 11,
+        "invisibleMeshCount": 0,
+        "instancedMeshCount": 11,
+        "instanceCount": 16773,
+        "materialRoles": {
+          "side": 4,
+          "roof": 4,
+          "boundary-ridge": 1,
+          "boundary-side": 1,
+          "boundary-roof": 1
+        },
+        "materials": [
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "terrain": {
+        "meshCount": 1,
+        "visibleMeshCount": 1,
+        "invisibleMeshCount": 0,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "materialRoles": {
+          "unlabeled": 1
+        },
+        "materials": [
+          {}
+        ]
+      },
+      "park": {
+        "meshCount": 931,
+        "visibleMeshCount": 77,
+        "invisibleMeshCount": 854,
+        "instancedMeshCount": 3,
+        "instanceCount": 12998,
+        "materialRoles": {
+          "trunk": 1,
+          "canopy": 1,
+          "bench": 1,
+          "path": 928
+        },
+        "materials": [
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "highway": {
+        "meshCount": 2,
+        "visibleMeshCount": 0,
+        "invisibleMeshCount": 2,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "materialRoles": {
+          "road": 1,
+          "barrier": 1
+        },
+        "materials": [
+          {},
+          {}
+        ]
+      }
+    }
+  }
+}

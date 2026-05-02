@@ -1,0 +1,686 @@
+{
+  "url": "http://127.0.0.1:4173/index.html",
+  "httpStatus": 200,
+  "pageErrors": [],
+  "consoleErrorCount": 21,
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)",
+    "Failed to load resource: the server responded with a status of 404 (File not found)"
+  ],
+  "badResponseCount": 21,
+  "badResponses": [
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_front.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_frontRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_back.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_backRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_front.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_back.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck_sideRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_frontRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_backRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_front.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civBus_sideRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_back.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_frontRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_backRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civCar2_sideRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_front.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_back.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_sideRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_backRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/data/vehicles/civTruck2_frontRight.png"
+    },
+    {
+      "status": 404,
+      "url": "http://127.0.0.1:4173/auth/me"
+    }
+  ],
+  "diagnostics": {
+    "generatedAt": "2026-05-01T04:44:01.070Z",
+    "skyboxMode": "day",
+    "renderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 8,
+      "physicallyCorrectLights": null,
+      "useLegacyLights": false,
+      "clearColor": "#b8dcff",
+      "pixelRatio": 1,
+      "size": [
+        1280,
+        720
+      ]
+    },
+    "rearRenderer": {
+      "outputColorSpace": "srgb",
+      "outputEncoding": 3001,
+      "toneMapping": 0,
+      "toneMappingExposure": 8,
+      "physicallyCorrectLights": null,
+      "useLegacyLights": false,
+      "clearColor": "#b8dcff",
+      "pixelRatio": 1,
+      "size": [
+        436,
+        111
+      ]
+    },
+    "fog": {
+      "color": "#b8dcff",
+      "near": 1000000,
+      "far": 10000000,
+      "density": null
+    },
+    "background": {
+      "type": 1009,
+      "uuid": "0985afed-4919-4157-9616-a59534bd429c"
+    },
+    "lights": [
+      {
+        "name": "vxm-emergency-ambient-light",
+        "type": "AmbientLight",
+        "uuid": "6e927be9-d8ab-441a-860e-6525682df7bb",
+        "visible": true,
+        "intensity": 40,
+        "color": "#ffffff",
+        "groundColor": null,
+        "position": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "name": "vxm-emergency-fill-light",
+        "type": "HemisphereLight",
+        "uuid": "f4cf2494-7eb6-4098-9ad4-6d07d2841618",
+        "visible": true,
+        "intensity": 35,
+        "color": "#ffffff",
+        "groundColor": "#ffffff",
+        "position": [
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "name": "vxm-emergency-sun-light",
+        "type": "DirectionalLight",
+        "uuid": "f5318107-da4b-4f14-9e53-cfdc4bf9b3de",
+        "visible": true,
+        "intensity": 50,
+        "color": "#ffffff",
+        "groundColor": null,
+        "position": [
+          0.45,
+          1,
+          0.25
+        ]
+      }
+    ],
+    "worldSystems": {
+      "hasTerrain": true,
+      "hasOcean": true,
+      "hasHighway": true,
+      "hasPark": true,
+      "buildingAabbCount": 8436
+    },
+    "meshes": {
+      "building": {
+        "meshCount": 11,
+        "instancedMeshCount": 11,
+        "instanceCount": 16773,
+        "visibleMeshCount": 11,
+        "invisibleMeshCount": 0,
+        "materialRoles": {
+          "side": 4,
+          "roof": 4,
+          "boundary-ridge": 1,
+          "boundary-side": 1,
+          "boundary-roof": 1
+        },
+        "materials": [
+          {
+            "meshes": 4,
+            "instances": 8243,
+            "material": {
+              "name": "building-side-bucket-0",
+              "type": "MeshLambertMaterial",
+              "role": "side",
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "dbcf1e96-abdf-4ad4-aa47-8d343c43257f",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 1242
+            }
+          },
+          {
+            "meshes": 4,
+            "instances": 8243,
+            "material": {
+              "name": "building-roof-bucket-0",
+              "type": "MeshLambertMaterial",
+              "role": "roof",
+              "boundaryType": null,
+              "color": "#4e5663",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 1242
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 99,
+            "material": {
+              "name": "building-boundary-mountain-ridges",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-ridge",
+              "boundaryType": "mountainRidges",
+              "color": "#5f6670",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 99
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 94,
+            "material": {
+              "name": "building-boundary-oversized-sides",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-side",
+              "boundaryType": "oversizedBuildings",
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "62771192-84be-49ed-bb3e-102901915bbe",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 94
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 94,
+            "material": {
+              "name": "building-boundary-oversized-roofs",
+              "type": "MeshLambertMaterial",
+              "role": "boundary-roof",
+              "boundaryType": "oversizedBuildingRoofs",
+              "color": "#4e5663",
+              "emissive": "#000000",
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": 94
+            }
+          }
+        ]
+      },
+      "terrain": {
+        "meshCount": 1,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "visibleMeshCount": 1,
+        "invisibleMeshCount": 0,
+        "materialRoles": {
+          "unlabeled": 1
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "terrain-surface",
+              "type": "MeshLambertMaterial",
+              "role": null,
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": "#000000",
+              "map": {
+                "uuid": "cedf5c32-bb45-4358-9c73-bcb47ff7431c",
+                "name": null,
+                "source": null
+              },
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": true,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": null
+            }
+          }
+        ]
+      },
+      "park": {
+        "meshCount": 931,
+        "instancedMeshCount": 3,
+        "instanceCount": 12998,
+        "visibleMeshCount": 77,
+        "invisibleMeshCount": 854,
+        "materialRoles": {
+          "trunk": 1,
+          "canopy": 1,
+          "bench": 1,
+          "path": 928
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 5216,
+            "material": {
+              "name": "park-trunk-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "trunk",
+              "boundaryType": null,
+              "color": "#ff8c00",
+              "emissive": null,
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 5216
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 5216,
+            "material": {
+              "name": "park-canopy-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "canopy",
+              "boundaryType": null,
+              "color": "#39ff14",
+              "emissive": null,
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 5216
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 2566,
+            "material": {
+              "name": "park-bench-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "bench",
+              "boundaryType": null,
+              "color": "#fff700",
+              "emissive": null,
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": 2566
+            }
+          },
+          {
+            "meshes": 851,
+            "instances": 0,
+            "material": {
+              "name": "park-path-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "path",
+              "boundaryType": null,
+              "color": "#00f6ff",
+              "emissive": null,
+              "map": null,
+              "transparent": true,
+              "opacity": 0.78,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          },
+          {
+            "meshes": 77,
+            "instances": 0,
+            "material": {
+              "name": "park-path-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "path",
+              "boundaryType": null,
+              "color": "#00f6ff",
+              "emissive": null,
+              "map": null,
+              "transparent": true,
+              "opacity": 0.78,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": true,
+              "instanceCount": null
+            }
+          }
+        ]
+      },
+      "highway": {
+        "meshCount": 2,
+        "instancedMeshCount": 0,
+        "instanceCount": 0,
+        "visibleMeshCount": 0,
+        "invisibleMeshCount": 2,
+        "materialRoles": {
+          "road": 1,
+          "barrier": 1
+        },
+        "materials": [
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "highway-road-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "road",
+              "boundaryType": null,
+              "color": "#ffffff",
+              "emissive": null,
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          },
+          {
+            "meshes": 1,
+            "instances": 0,
+            "material": {
+              "name": "highway-barrier-fullbright-emergency",
+              "type": "MeshBasicMaterial",
+              "role": "barrier",
+              "boundaryType": null,
+              "color": "#ff4df2",
+              "emissive": null,
+              "map": null,
+              "transparent": false,
+              "opacity": 1,
+              "toneMapped": false,
+              "wireframe": false,
+              "side": 0,
+              "visible": false,
+              "instanceCount": null
+            }
+          }
+        ]
+      }
+    }
+  },
+  "pixelStats": {
+    "width": 1280,
+    "height": 720,
+    "avgRgb": {
+      "r": 233.1895529513889,
+      "g": 230.00247287326388,
+      "b": 231.4124001736111
+    },
+    "brightRatio": 0.8702669270833333,
+    "blackRatio": 0.0023350694444444443
+  },
+  "terrainMaterials": [
+    {
+      "meshes": 1,
+      "instances": 0,
+      "material": {
+        "name": "terrain-surface",
+        "type": "MeshLambertMaterial",
+        "role": null,
+        "boundaryType": null,
+        "color": "#ffffff",
+        "emissive": "#000000",
+        "map": {
+          "uuid": "cedf5c32-bb45-4358-9c73-bcb47ff7431c",
+          "name": null,
+          "source": null
+        },
+        "transparent": false,
+        "opacity": 1,
+        "toneMapped": true,
+        "wireframe": false,
+        "side": 0,
+        "visible": true,
+        "instanceCount": null
+      }
+    }
+  ],
+  "buildingMaterials": [
+    {
+      "meshes": 4,
+      "instances": 8243,
+      "material": {
+        "name": "building-side-bucket-0",
+        "type": "MeshLambertMaterial",
+        "role": "side",
+        "boundaryType": null,
+        "color": "#ffffff",
+        "emissive": "#000000",
+        "map": {
+          "uuid": "dbcf1e96-abdf-4ad4-aa47-8d343c43257f",
+          "name": null,
+          "source": null
+        },
+        "transparent": false,
+        "opacity": 1,
+        "toneMapped": true,
+        "wireframe": false,
+        "side": 0,
+        "visible": true,
+        "instanceCount": 1242
+      }
+    },
+    {
+      "meshes": 4,
+      "instances": 8243,
+      "material": {
+        "name": "building-roof-bucket-0",
+        "type": "MeshLambertMaterial",
+        "role": "roof",
+        "boundaryType": null,
+        "color": "#4e5663",
+        "emissive": "#000000",
+        "map": null,
+        "transparent": false,
+        "opacity": 1,
+        "toneMapped": true,
+        "wireframe": false,
+        "side": 0,
+        "visible": true,
+        "instanceCount": 1242
+      }
+    },
+    {
+      "meshes": 1,
+      "instances": 99,
+      "material": {
+        "name": "building-boundary-mountain-ridges",
+        "type": "MeshLambertMaterial",
+        "role": "boundary-ridge",
+        "boundaryType": "mountainRidges",
+        "color": "#5f6670",
+        "emissive": "#000000",
+        "map": null,
+        "transparent": false,
+        "opacity": 1,
+        "toneMapped": true,
+        "wireframe": false,
+        "side": 0,
+        "visible": true,
+        "instanceCount": 99
+      }
+    },
+    {
+      "meshes": 1,
+      "instances": 94,
+      "material": {
+        "name": "building-boundary-oversized-sides",
+        "type": "MeshLambertMaterial",
+        "role": "boundary-side",
+        "boundaryType": "oversizedBuildings",
+        "color": "#ffffff",
+        "emissive": "#000000",
+        "map": {
+          "uuid": "62771192-84be-49ed-bb3e-102901915bbe",
+          "name": null,
+          "source": null
+        },
+        "transparent": false,
+        "opacity": 1,
+        "toneMapped": true,
+        "wireframe": false,
+        "side": 0,
+        "visible": true,
+        "instanceCount": 94
+      }
+    },
+    {
+      "meshes": 1,
+      "instances": 94,
+      "material": {
+        "name": "building-boundary-oversized-roofs",
+        "type": "MeshLambertMaterial",
+        "role": "boundary-roof",
+        "boundaryType": "oversizedBuildingRoofs",
+        "color": "#4e5663",
+        "emissive": "#000000",
+        "map": null,
+        "transparent": false,
+        "opacity": 1,
+        "toneMapped": true,
+        "wireframe": false,
+        "side": 0,
+        "visible": true,
+        "instanceCount": 94
+      }
+    }
+  ]
+}
