@@ -49,7 +49,7 @@ function flushTimers() {
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
-const { GAME, BOSS, LEVEL } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { GAME, LEVEL } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 const { createLevelManager, pickPlayerSpawn, pickBossSpawn, snapToWalkable, pickBossRow } =
   await import(pathToFileURL(resolve(root, 'lib/game/levels.js')));
 const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
@@ -89,22 +89,6 @@ const navGrid = buildNavGrid({
   intersections: [],
   interestPoints,
 });
-
-// ── State machine mock (no DOM or THREE) ──────────────────────────────────────
-
-function makeGameStateMock() {
-  // Minimal stubs so createGameState logic runs without THREE.
-  const hudCalls = [];
-  const game = {
-    state: 'playing',
-    charge: 50,
-    capacitors: 1,
-    health: 2,
-    mootsAlive: 0,
-    mootsTotal: 0,
-  };
-  return { game, hudCalls };
-}
 
 console.log('\n── Phase 9c Level / Victory smoke tests ─────────────────────────────────\n');
 

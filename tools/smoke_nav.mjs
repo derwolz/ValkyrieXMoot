@@ -197,7 +197,7 @@ function idxToColRow(i, cols) {
 }
 
 function nearestWalkable(grid, col, row) {
-  const { cols, rows, walkable, idx } = grid;
+  const { walkable, idx } = grid;
   for (let r = 1; r <= 20; r++) {
     for (let dc = -r; dc <= r; dc++)
       for (let dr = -r; dr <= r; dr++) {

@@ -24,7 +24,7 @@ globalThis.location = { search: '' };
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
-const { AI, BOSS, MOOT, NAV } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { BOSS } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
 const { tickBoss } = await import(pathToFileURL(resolve(root, 'lib/ai/boss.js')));
 

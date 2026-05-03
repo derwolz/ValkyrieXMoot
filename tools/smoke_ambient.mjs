@@ -43,11 +43,9 @@ const root = resolve(new URL('.', import.meta.url).pathname, '..');
 // Provide a global stub.
 globalThis.location = { search: '' };
 
-const { AI, NAV, CITY, MOOT, CAR } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { AI } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
 const { findPath } = await import(pathToFileURL(resolve(root, 'lib/nav/pathfind.js')));
-const { moveWithCollision } = await import(pathToFileURL(resolve(root, 'lib/nav/collision.js')));
-
 // ── Load ambient.js with THREE stub injected ──────────────────────────────────
 // ambient.js does not import THREE, so we can load it directly.
 const { tickUnaware, pickAmbientDest } = await import(

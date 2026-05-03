@@ -19,7 +19,7 @@ globalThis.location = { search: '' };
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
-const { AI, MOOT, NAV } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { AI } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
 const { findPath } = await import(pathToFileURL(resolve(root, 'lib/nav/pathfind.js')));
 const { pickFleeDest, tickFlee } = await import(pathToFileURL(resolve(root, 'lib/ai/flee.js')));

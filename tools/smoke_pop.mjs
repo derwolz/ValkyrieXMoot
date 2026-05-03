@@ -36,7 +36,7 @@ globalThis.THREE = {
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
 // Import config first (needs location stub)
-const { POP, BOSS, MOOT, NAV } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { POP, BOSS } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 
 // ── Minimal stubs for Three.js-dependent modules ──────────────────────────────
 
@@ -134,18 +134,6 @@ function test(name, fn) {
     fail++;
   }
 }
-async function testAsync(name, fn) {
-  try {
-    await fn();
-    console.log(`  ✓ ${name}`);
-    pass++;
-  } catch (e) {
-    console.error(`  ✗ ${name}`);
-    console.error('   ', e.message);
-    fail++;
-  }
-}
-
 console.log('\n── Phase 8 Population Manager smoke tests ────────────────────────────────\n');
 
 // 1. POP config sanity

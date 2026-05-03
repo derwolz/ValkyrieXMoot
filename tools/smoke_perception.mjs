@@ -39,8 +39,6 @@ const { tickPerception, hasLOS } = await import(
   pathToFileURL(resolve(root, 'lib/ai/perception.js'))
 );
 
-const { AI } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
-
 // ---------------------------------------------------------------------------
 // Test helpers
 // ---------------------------------------------------------------------------

@@ -17,7 +17,7 @@ import { resolve } from 'node:path';
 globalThis.location = { search: '' };
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
-const { GAME, BOSS, MOOT, AMMO } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { GAME, BOSS } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 
 // ── Test runner ───────────────────────────────────────────────────────────────
 

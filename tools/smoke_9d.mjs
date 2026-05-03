@@ -159,15 +159,6 @@ const document = {
   },
 };
 
-// Patch panel.querySelector to work with our mock
-function patchPanelQuerySelector(panel) {
-  panel.querySelector = (sel) => {
-    const m = sel.match(/^#(.+)$/);
-    if (m) return elements[m[1]] ?? null;
-    return null;
-  };
-}
-
 // Make globalThis.document available
 globalThis.document = document;
 globalThis.location = { search: '' };
@@ -195,10 +186,6 @@ function test(name, fn) {
 
 function assert(cond, msg) {
   if (!cond) throw new Error(msg || 'assertion failed');
-}
-
-function approxEq(a, b, eps = 0.001) {
-  return Math.abs(a - b) < eps;
 }
 
 // ── Helper: build a mock boss handle ─────────────────────────────────────────
