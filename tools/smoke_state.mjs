@@ -12,7 +12,7 @@
 
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
-import { resolve }       from 'node:path';
+import { resolve } from 'node:path';
 
 globalThis.location = { search: '' };
 
@@ -21,10 +21,18 @@ const { GAME, BOSS, MOOT, AMMO } = await import(pathToFileURL(resolve(root, 'lib
 
 // ── Test runner ───────────────────────────────────────────────────────────────
 
-let pass = 0, fail = 0;
+let pass = 0;
+let fail = 0;
 function test(name, fn) {
-  try { fn(); console.log(`  ✓ ${name}`); pass++; }
-  catch (e) { console.error(`  ✗ ${name}`); console.error('   ', e.message); fail++; }
+  try {
+    fn();
+    console.log(`  ✓ ${name}`);
+    pass++;
+  } catch (e) {
+    console.error(`  ✗ ${name}`);
+    console.error('   ', e.message);
+    fail++;
+  }
 }
 
 console.log('\n── Phase 9b Ammo economy + damage rules smoke tests ─────────────────────\n');
@@ -81,7 +89,7 @@ function ramMootsLogic(rammed, game) {
 // 1. Ram regular gives charge
 test('ramming a regular moot gives GAME.chargePerRam charge', () => {
   const handle = { isBoss: false, alive: true, hp: 1, mootRow: { id: 'r1' } };
-  const game   = { charge: 50, capacitors: 0, mootsAlive: 5 };
+  const game = { charge: 50, capacitors: 0, mootsAlive: 5 };
   ramMootsLogic([handle], game);
   assert.ok(!handle.alive, 'moot should be dead');
   assert.equal(game.charge, 50 + GAME.chargePerRam, 'charge should increase by chargePerRam');
@@ -119,7 +127,7 @@ test('boss dies after exactly 10 pistol shots', () => {
   const shotsNeeded = BOSS.hp / BOSS.pistolDamage;
 
   for (let i = 0; i < shotsNeeded - 1; i++) {
-    const result = splatMootLogic(boss, 'shot', game);
+    const _result = splatMootLogic(boss, 'shot', game);
     assert.ok(boss.alive, `boss should survive shot ${i + 1}`);
   }
   // Final shot
@@ -144,13 +152,17 @@ test('charge refund is skipped when ramming boss that survives', () => {
   const game = { charge: 50, capacitors: 0, mootsAlive: 5 };
   const prevCharge = game.charge;
   ramMootsLogic([boss], game);
-  assert.equal(game.charge, prevCharge, 'charge should be unchanged after boss ram that does not kill');
+  assert.equal(
+    game.charge,
+    prevCharge,
+    'charge should be unchanged after boss ram that does not kill',
+  );
 });
 
 // 8. Regular moot ram adds capacitor when charge is full
 test('ramming regular when charge is full banks a capacitor', () => {
   const handle = { isBoss: false, alive: true, hp: 1, mootRow: { id: 'r2' } };
-  const game   = { charge: GAME.maxCharge, capacitors: 0, mootsAlive: 5 };
+  const game = { charge: GAME.maxCharge, capacitors: 0, mootsAlive: 5 };
   ramMootsLogic([handle], game);
   assert.equal(game.capacitors, 1, 'capacitor should increment when charge was full');
   assert.equal(game.charge, 0, 'charge should reset to 0 after capacitor bank');

@@ -1,21 +1,54 @@
 import * as THREE from 'three';
 import { loadDb } from './lib/data/mootLoader.js';
 import { Vehicle } from './lib/car/vehicle.js';
-import { resolveBuildingCollisions, resolveNpcVehicleBodyCollision } from './lib/car/collision.js';
+import {
+  resolveBuildingCollisions,
+  resolveNpcVehicleBodyCollision,
+  resolveMapBounds,
+} from './lib/car/collision.js';
 import { Pistol } from './lib/weapons/pistol.js';
 import { clearMootProjectiles, updateFlingMoots } from './lib/entities/moots.js';
 import { createRecorder } from './lib/rewind/recorder.js';
 import { createPlayback } from './lib/rewind/playback.js';
-import { createHud, updateHud, hideLoginPrompt, registerHudSlot, setHudSlot, removeHudSlot, updateTargetHud, setGameOverVisible } from './lib/hud/overlays.js';
+import {
+  createHud,
+  updateHud,
+  hideLoginPrompt,
+  registerHudSlot,
+  setHudSlot,
+  removeHudSlot,
+  updateTargetHud,
+  setGameOverVisible,
+} from './lib/hud/overlays.js';
 import { getMe, postQueue } from './lib/api.js';
-import { createMirror, setFace, setReactionImage, setReactionImages, getMirrorCanvas, getMirrorSize } from './lib/hud/mirror.js';
+import {
+  createMirror,
+  setFace,
+  setReactionImage,
+  setReactionImages,
+  getMirrorCanvas,
+  getMirrorSize,
+} from './lib/hud/mirror.js';
 import { createSpeedLines, setSpeedLinesActive } from './lib/hud/speedLines.js';
 import { setupDebugPanel } from './lib/debug/panel.js';
 import { Mouse } from './lib/mouse.js';
 import { TouchInput } from './lib/input/touch.js';
 import { Bindings } from './lib/input/bindings.js';
 import { PauseMenu } from './lib/ui/pauseMenu.js';
-import { SKYBOX, MOOT, GAME, CITY, WORLD, HIGHWAY, NPC_VEHICLE, TARGET, BOOST, MIRROR, SCORING, PISTOL, DEBUG } from './lib/config.js';
+import {
+  SKYBOX,
+  MOOT,
+  GAME,
+  CITY,
+  WORLD,
+  HIGHWAY,
+  NPC_VEHICLE,
+  TARGET,
+  BOOST,
+  MIRROR,
+  SCORING,
+  DEBUG,
+} from './lib/config.js';
 import { buildZoneMap, buildZoneMapFromSnapshot } from './lib/world/zones/zoneMap.js';
 import { buildTerrain } from './lib/world/terrain/heightmap.js';
 import { buildOcean } from './lib/world/terrain/ocean.js';
@@ -27,7 +60,12 @@ import { loadAllVehicleTextures } from './lib/assets/vehicleTextures.js';
 import { createPlayerSprite } from './lib/car/playerSprite.js';
 import { createImpactSystem } from './lib/game/impacts.js';
 import { createGameState } from './lib/game/state.js';
-import { generateCity, generateCityLayout, hydrateCityLayout, serializeCityLayout } from './lib/world/city/generator.js';
+import {
+  generateCity,
+  generateCityLayout,
+  hydrateCityLayout,
+  serializeCityLayout,
+} from './lib/world/city/generator.js';
 import { createPopulation } from './lib/world/population.js';
 import { createMinimap } from './lib/hud/minimap.js';
 import { createTargetMarker } from './lib/entities/targetMarker.js';
@@ -98,10 +136,16 @@ function applyHighVisibilityRendererSettings(targetRenderer) {
 
   // Explicit color/tone settings keep emergency full-bright colors out of
   // renderer defaults that can vary across Three.js revisions.
-  if (Object.prototype.hasOwnProperty.call(rendererSettings, 'outputColorSpace') && 'outputColorSpace' in targetRenderer) {
+  if (
+    Object.prototype.hasOwnProperty.call(rendererSettings, 'outputColorSpace') &&
+    'outputColorSpace' in targetRenderer
+  ) {
     targetRenderer.outputColorSpace = resolveRendererColorSpace(rendererSettings.outputColorSpace);
   }
-  if (Object.prototype.hasOwnProperty.call(rendererSettings, 'outputEncoding') && 'outputEncoding' in targetRenderer) {
+  if (
+    Object.prototype.hasOwnProperty.call(rendererSettings, 'outputEncoding') &&
+    'outputEncoding' in targetRenderer
+  ) {
     targetRenderer.outputEncoding = resolveRendererOutputEncoding(rendererSettings.outputEncoding);
   }
   targetRenderer.toneMapping = resolveToneMapping(rendererSettings.toneMapping);
@@ -116,18 +160,23 @@ function createVisibilitySafeFog(preset) {
   const requestedFar = Number.isFinite(emergencyFog.far) ? emergencyFog.far : preset.fog.far;
   const safeNear = Math.max(0, requestedNear);
   const safeFar = Math.max(safeNear + 1, requestedFar);
-  return new THREE.Fog(preset.fog.color ?? preset.clearColor ?? WORLD.clearColor, safeNear, safeFar);
+  return new THREE.Fog(
+    preset.fog.color ?? preset.clearColor ?? WORLD.clearColor,
+    safeNear,
+    safeFar,
+  );
 }
 
 // ── Scene setup ───────────────────────────────────────────────────────────────
 
 const overlay = document.getElementById('overlay');
-const canvas  = document.getElementById('c');
+const canvas = document.getElementById('c');
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 applyHighVisibilityRendererSettings(renderer);
 const selectedSkyboxMode = resolveSkyboxMode();
-const selectedSkyboxPreset = SKYBOX.presets[selectedSkyboxMode] || SKYBOX.presets[SKYBOX.defaultMode];
+const selectedSkyboxPreset =
+  SKYBOX.presets[selectedSkyboxMode] || SKYBOX.presets[SKYBOX.defaultMode];
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight, false);
 renderer.setClearColor(selectedSkyboxPreset.clearColor, 1);
@@ -187,48 +236,48 @@ window.addEventListener('resize', () => {
 
 // ── Core objects ──────────────────────────────────────────────────────────────
 
-const vehicle      = new Vehicle();
-const pistol       = new Pistol(camera);
-const recorder     = createRecorder();
+const vehicle = new Vehicle();
+const pistol = new Pistol(camera);
+const recorder = createRecorder();
 const impactSystem = createImpactSystem(scene);
 
 let buildingAABBs = [];
-let buildingGrid  = null;
-let navGrid       = null;
+let buildingGrid = null;
+let navGrid = null;
 let interestPoints = [];
-let population    = null;
-let levelManager  = null;
-let db            = null;
+let population = null;
+let _levelManager = null;
+let db = null;
 let worldCacheUserKey = 'guest';
-let cityBounds    = null;  // { minX, maxX, minZ, maxZ } — set after each buildCity call for spawn/minimap data
-let currentPlayerSpawn = null;  // spawn reused by in-world restarts so the world is not regenerated
+let cityBounds = null; // { minX, maxX, minZ, maxZ } — set after each buildCity call for spawn/minimap data
+let currentPlayerSpawn = null; // spawn reused by in-world restarts so the world is not regenerated
 // World systems — rebuilt on each buildCity call.
-let zoneMap       = null;
-let terrainSystem = null;  // { mesh, getTerrainY, dispose }
-let oceanSystem   = null;  // { mesh, dispose }
-let highwaySystem = null;  // { meshes, rampAABBs, dispose }
-let parkSystem    = null;  // { treeAABBs, dispose }
-let chunkManager  = createChunkManager();
+let zoneMap = null;
+let terrainSystem = null; // { mesh, getTerrainY, dispose }
+let oceanSystem = null; // { mesh, dispose }
+let highwaySystem = null; // { meshes, rampAABBs, dispose }
+let parkSystem = null; // { treeAABBs, dispose }
+let chunkManager = createChunkManager();
 
-let isBuilding       = false;  // guard against concurrent buildCity calls
-let playerSprite     = null;   // player car sprite (third-person)
-let npcVehiclePool   = null;   // pool of NPC vehicles
-let targetMarker     = null;   // ground ring under the current target moot
-let minimap          = null;   // minimap replacing the old radar
+let isBuilding = false; // guard against concurrent buildCity calls
+let playerSprite = null; // player car sprite (third-person)
+let npcVehiclePool = null; // pool of NPC vehicles
+let targetMarker = null; // ground ring under the current target moot
+let minimap = null; // minimap replacing the old radar
 
-let playback      = null;
-let radio         = null;  // radio system (3 channels)
-let paused        = false;
-let noclip        = false;
-let lastTime      = 0;
-let wasBoosting   = false;
+let playback = null;
+let radio = null; // radio system (3 channels)
+const paused = false;
+let noclip = false;
+let lastTime = 0;
+let wasBoosting = false;
 
 // Rearview mirror renderer/camera — populated by setupRearview() once the
 // mirror DOM exists. The mirror camera sits just above the player and looks
 // in the opposite direction the vehicle is facing.
 let rearRenderer = null;
-let rearCamera   = null;
-const _rearLook  = new THREE.Vector3();
+let rearCamera = null;
+const _rearLook = new THREE.Vector3();
 let rearFrameModulo = 0;
 
 function setupRearview() {
@@ -279,20 +328,20 @@ function updatePistolAimAndShoot() {
 // ── Shared context fed to all AI tick functions each frame ────────────────────
 
 // Updated every frame before AI dispatch.
-let aiCtx = {
-  navGrid:        null,
-  buildingAABBs:  [],
-  buildingGrid:   null,
-  interestPoints: [],  // set once per city-build, not per frame
-  truckPos:      { x: 0, z: 0 },
-  truckVelX:     0,
-  truckVelZ:     0,
-  now:           0,
-  recentKills:   [],  // [{x,z,at}] — filled by splatMoot callback
-  recentShots:   [],  // [{x,z,at}] — filled by tryShoot
-  recentKillsCursor: 0,  // start-index cursor for O(1) pruning
-  recentShotsCursor: 0,  // start-index cursor for O(1) pruning
-  spawnProjectile: null,  // bound after scene is available
+const aiCtx = {
+  navGrid: null,
+  buildingAABBs: [],
+  buildingGrid: null,
+  interestPoints: [], // set once per city-build, not per frame
+  truckPos: { x: 0, z: 0 },
+  truckVelX: 0,
+  truckVelZ: 0,
+  now: 0,
+  recentKills: [], // [{x,z,at}] — filled by splatMoot callback
+  recentShots: [], // [{x,z,at}] — filled by tryShoot
+  recentKillsCursor: 0, // start-index cursor for O(1) pruning
+  recentShotsCursor: 0, // start-index cursor for O(1) pruning
+  spawnProjectile: null, // bound after scene is available
 };
 
 // Shared bullet geometry and material — created once, never disposed per-bullet.
@@ -310,7 +359,7 @@ function makeSpawnProjectile(sceneRef) {
     const nz = dz / dist;
 
     const mesh = new THREE.Mesh(bulletGeo, bulletMat);
-    mesh.userData.isBullet = true;  // prevent _clearCityMeshes from disposing shared geometry/material
+    mesh.userData.isBullet = true; // prevent _clearCityMeshes from disposing shared geometry/material
     mesh.position.set(
       origin.x + nx * 0.6,
       origin.y !== undefined ? origin.y : MOOT.projectileSpawnHeight,
@@ -361,7 +410,7 @@ function clearAiProjectiles() {
 }
 
 function pickMapWideObjectivePoint() {
-  const points = interestPoints.length > 0 ? interestPoints : (navGrid?.interestPoints || []);
+  const points = interestPoints.length > 0 ? interestPoints : navGrid?.interestPoints || [];
   if (points.length === 0) return null;
 
   for (let i = 0; i < 20; i++) {
@@ -385,15 +434,15 @@ const gs = createGameState({
   camera,
   vehicle,
   recorder,
-  getPlayback:      () => playback,
-  getMootHandles:   () => population ? population.getHandles() : [],
-  getSessionMoots:  () => [],       // unused in new pipeline
+  getPlayback: () => playback,
+  getMootHandles: () => (population ? population.getHandles() : []),
+  getSessionMoots: () => [], // unused in new pipeline
   impactSystem,
   pistol,
   updateHud,
   spawnObjectiveTarget: spawnMapWideObjectiveTarget,
   releaseObjectiveTarget(handle) {
-    if (population && population.releaseObjectiveTarget) {
+    if (population?.releaseObjectiveTarget) {
       population.releaseObjectiveTarget(handle);
     }
   },
@@ -439,11 +488,19 @@ const gs = createGameState({
   },
 });
 
-const { game, ramMoots, tryShoot: _legacyTryShoot,
-        tickCrashCooldown, tickTimer, designateNewTarget,
-        onRewindDone, onMootBulletHit,
-        toggleSessionTimer, resetRunState,
-        setCurrentPlayer } = gs;
+const {
+  game,
+  ramMoots,
+  tryShoot: _legacyTryShoot,
+  tickCrashCooldown,
+  tickTimer,
+  designateNewTarget,
+  onRewindDone,
+  onMootBulletHit,
+  toggleSessionTimer,
+  resetRunState,
+  setCurrentPlayer,
+} = gs;
 
 // Wrap tryShoot to also record the shot event for perception (recentShots).
 function tryShoot(aim) {
@@ -483,11 +540,13 @@ function describeMaterial(material, sourceMesh) {
     boundaryType: sourceMesh.userData?.boundaryType ?? null,
     color: formatHexColor(material.color),
     emissive: formatHexColor(material.emissive),
-    map: material.map ? {
-      uuid: material.map.uuid,
-      name: material.map.name || null,
-      source: material.map.source?.data?.src || null,
-    } : null,
+    map: material.map
+      ? {
+          uuid: material.map.uuid,
+          name: material.map.name || null,
+          source: material.map.source?.data?.src || null,
+        }
+      : null,
     transparent: Boolean(material.transparent),
     opacity: material.opacity,
     toneMapped: material.toneMapped ?? null,
@@ -511,7 +570,7 @@ function summarizeMaterial(material, sourceMesh, summary) {
       toneMapped: description.toneMapped,
       visible: description.visible,
     });
-    const existing = summary.materials.find(entry => entry.key === key);
+    const existing = summary.materials.find((entry) => entry.key === key);
     if (existing) {
       existing.meshes += 1;
       existing.instances += sourceMesh.isInstancedMesh ? sourceMesh.count : 0;
@@ -631,9 +690,10 @@ function getVisibilityDiagnostics() {
     renderer: describeRenderer(renderer),
     rearRenderer: describeRenderer(rearRenderer),
     fog: describeFog(scene.fog),
-    background: scene.background instanceof THREE.Color
-      ? formatHexColor(scene.background)
-      : { type: scene.background?.type ?? null, uuid: scene.background?.uuid ?? null },
+    background:
+      scene.background instanceof THREE.Color
+        ? formatHexColor(scene.background)
+        : { type: scene.background?.type ?? null, uuid: scene.background?.uuid ?? null },
     lights: describeLights(),
     worldSystems: {
       hasTerrain: Boolean(terrainSystem),
@@ -651,7 +711,11 @@ function getVisibilityDiagnostics() {
 function resolveWorldCacheUserKey(player) {
   if (!player) return 'guest';
   const rawKey = player.id ?? player.handle ?? player.username ?? player.name ?? 'guest';
-  return String(rawKey).replace(/[^a-z0-9_-]/gi, '_').slice(0, 80) || 'guest';
+  return (
+    String(rawKey)
+      .replace(/[^a-z0-9_-]/gi, '_')
+      .slice(0, 80) || 'guest'
+  );
 }
 
 function getWorldLayoutCacheSchema() {
@@ -750,7 +814,10 @@ function openWorldCacheDb() {
       }
     };
     request.onerror = () => {
-      console.warn('[vxm] IndexedDB world cache open failed; generating world data normally', request.error);
+      console.warn(
+        '[vxm] IndexedDB world cache open failed; generating world data normally',
+        request.error,
+      );
       resolve(null);
     };
     request.onsuccess = () => resolve(request.result);
@@ -771,7 +838,10 @@ function readWorldCacheRecord(cacheDb, key) {
       return;
     }
     request.onerror = () => {
-      console.warn('[vxm] IndexedDB world cache read failed; generating world data normally', request.error);
+      console.warn(
+        '[vxm] IndexedDB world cache read failed; generating world data normally',
+        request.error,
+      );
       resolve(null);
     };
     request.onsuccess = () => resolve(request.result || null);
@@ -787,12 +857,18 @@ function writeWorldCacheRecord(cacheDb, record) {
     try {
       request = cacheDb.transaction(storeName, 'readwrite').objectStore(storeName).put(record);
     } catch (err) {
-      console.warn('[vxm] IndexedDB world cache write failed; continuing without persisted world data', err);
+      console.warn(
+        '[vxm] IndexedDB world cache write failed; continuing without persisted world data',
+        err,
+      );
       resolve(false);
       return;
     }
     request.onerror = () => {
-      console.warn('[vxm] IndexedDB world cache write failed; continuing without persisted world data', request.error);
+      console.warn(
+        '[vxm] IndexedDB world cache write failed; continuing without persisted world data',
+        request.error,
+      );
       resolve(false);
     };
     request.onsuccess = () => resolve(true);
@@ -850,7 +926,9 @@ function hydrateHighwayRamp(ramp, index) {
     side: Number.isFinite(Number(ramp.side)) ? Number(ramp.side) : 1,
     direction: Number.isFinite(Number(ramp.direction)) ? Number(ramp.direction) : 1,
     attachIndex: Number.isFinite(Number(ramp.attachIndex)) ? Number(ramp.attachIndex) : 0,
-    halfWidth: Number.isFinite(Number(ramp.halfWidth)) ? Number(ramp.halfWidth) : HIGHWAY.rampHalfWidth,
+    halfWidth: Number.isFinite(Number(ramp.halfWidth))
+      ? Number(ramp.halfWidth)
+      : HIGHWAY.rampHalfWidth,
     points,
     controlPts,
     touchdown: hydrateHighwayPoint(ramp.touchdown) || points[points.length - 1],
@@ -872,11 +950,16 @@ function serializeHighwayRamp(ramp) {
 }
 
 function hydrateHighwayLayout(highway) {
-  if (!highway || typeof highway !== 'object' || !Array.isArray(highway.points) || !Array.isArray(highway.rampIndices)) {
+  if (
+    !highway ||
+    typeof highway !== 'object' ||
+    !Array.isArray(highway.points) ||
+    !Array.isArray(highway.rampIndices)
+  ) {
     return null;
   }
   const points = highway.points.map(hydrateHighwayPoint).filter(Boolean);
-  const rampIndices = highway.rampIndices.map(i => Number(i)).filter(Number.isFinite);
+  const rampIndices = highway.rampIndices.map((i) => Number(i)).filter(Number.isFinite);
   if (points.length < 2 || rampIndices.length < 3 || rampIndices.length > 4) return null;
 
   const controlPts = Array.isArray(highway.controlPts)
@@ -894,7 +977,7 @@ function hydrateHighwayLayout(highway) {
           halfWidth: HIGHWAY.corridorHalfWidth,
           points,
         },
-        ...ramps.map(ramp => ({
+        ...ramps.map((ramp) => ({
           id: ramp.id,
           kind: 'ramp',
           halfWidth: HIGHWAY.rampReservationHalfWidth,
@@ -902,15 +985,25 @@ function hydrateHighwayLayout(highway) {
         })),
       ];
 
-  if (ramps.length !== rampIndices.length || reservationPolylines.length < 1 + ramps.length) return null;
-  return { points, controlPts, rampIndices, ramps, reservationPolylines, isCircuit: Boolean(highway.isCircuit) };
+  if (ramps.length !== rampIndices.length || reservationPolylines.length < 1 + ramps.length)
+    return null;
+  return {
+    points,
+    controlPts,
+    rampIndices,
+    ramps,
+    reservationPolylines,
+    isCircuit: Boolean(highway.isCircuit),
+  };
 }
 
 function serializeHighwayLayout(highway) {
   return {
     isCircuit: Boolean(highway.isCircuit),
     points: highway.points.map(serializeHighwayPoint),
-    controlPts: Array.isArray(highway.controlPts) ? highway.controlPts.map(serializeHighwayPoint) : [],
+    controlPts: Array.isArray(highway.controlPts)
+      ? highway.controlPts.map(serializeHighwayPoint)
+      : [],
     rampIndices: highway.rampIndices.slice(),
     ramps: Array.isArray(highway.ramps) ? highway.ramps.map(serializeHighwayRamp) : [],
     reservationPolylines: Array.isArray(highway.reservationPolylines)
@@ -952,7 +1045,9 @@ async function loadCachedWorldData(seed) {
     };
   } catch (err) {
     console.warn('[vxm] IndexedDB world cache hydrate failed; generating world data normally', err);
-    try { cacheDb.close(); } catch {}
+    try {
+      cacheDb.close();
+    } catch {}
     return null;
   }
 }
@@ -979,8 +1074,13 @@ async function saveWorldDataToCache(seed, zoneMapRef, cityLayout, highway) {
     if (saved) console.log('[vxm] Saved generated world data to IndexedDB');
     return saved;
   } catch (err) {
-    console.warn('[vxm] IndexedDB world cache save failed; continuing without persisted world data', err);
-    try { cacheDb.close(); } catch {}
+    console.warn(
+      '[vxm] IndexedDB world cache save failed; continuing without persisted world data',
+      err,
+    );
+    try {
+      cacheDb.close();
+    } catch {}
     return false;
   }
 }
@@ -992,19 +1092,34 @@ async function saveWorldDataToCache(seed, zoneMapRef, cityLayout, highway) {
  * @param {number} seed
  */
 async function buildCity(seed) {
-  if (isBuilding) return;   // drop concurrent calls
+  if (isBuilding) return; // drop concurrent calls
   isBuilding = true;
 
   // Dispose previous world systems before clearing scene.
-  if (terrainSystem) { terrainSystem.dispose(); terrainSystem = null; }
-  if (oceanSystem)   { oceanSystem.dispose();   oceanSystem   = null; }
-  if (highwaySystem) { highwaySystem.dispose();  highwaySystem = null; }
-  if (parkSystem)    { parkSystem.dispose();     parkSystem    = null; }
+  if (terrainSystem) {
+    terrainSystem.dispose();
+    terrainSystem = null;
+  }
+  if (oceanSystem) {
+    oceanSystem.dispose();
+    oceanSystem = null;
+  }
+  if (highwaySystem) {
+    highwaySystem.dispose();
+    highwaySystem = null;
+  }
+  if (parkSystem) {
+    parkSystem.dispose();
+    parkSystem = null;
+  }
   chunkManager.dispose();
-  chunkManager = createChunkManager();  // fresh manager for new world
+  chunkManager = createChunkManager(); // fresh manager for new world
 
   // Destroy previous player sprite (it will be re-created below after scene clear).
-  if (playerSprite) { playerSprite.destroy(); playerSprite = null; }
+  if (playerSprite) {
+    playerSprite.destroy();
+    playerSprite = null;
+  }
 
   overlay.classList.remove('hidden');
   overlay.textContent = 'Generating city…';
@@ -1014,7 +1129,10 @@ async function buildCity(seed) {
   // Destroy old NPC vehicles.
   if (npcVehiclePool) npcVehiclePool.destroyAll();
   // Destroy old target marker.
-  if (targetMarker) { targetMarker.destroy(); targetMarker = null; }
+  if (targetMarker) {
+    targetMarker.destroy();
+    targetMarker = null;
+  }
   clearAiProjectiles();
   clearMootProjectiles(scene);
   aiCtx.recentKills.length = 0;
@@ -1055,7 +1173,8 @@ async function buildCity(seed) {
       zoneMap.markHighwayReservations(highwayLayout.reservationPolylines);
     } else {
       zoneMap.markHighway(hwPoints);
-      for (const ramp of highwayLayout.ramps || []) zoneMap.markHighway(ramp.points, { halfWidth: HIGHWAY.rampReservationHalfWidth });
+      for (const ramp of highwayLayout.ramps || [])
+        zoneMap.markHighway(ramp.points, { halfWidth: HIGHWAY.rampReservationHalfWidth });
     }
 
     // ── Precompute city layout (pure data, no THREE) ────────────────────────────
@@ -1095,11 +1214,11 @@ async function buildCity(seed) {
     getTerrainY: terrainSystem.getTerrainY,
     layout: cityLayout,
   });
-  buildingAABBs  = city.buildingAABBs;
-  buildingGrid   = city.buildingGrid;
+  buildingAABBs = city.buildingAABBs;
+  buildingGrid = city.buildingGrid;
   interestPoints = city.interestPoints;
-  navGrid        = city.navGrid;
-  cityBounds     = city.bounds;        // store per-level for spawn/minimap data
+  navGrid = city.navGrid;
+  cityBounds = city.bounds; // store per-level for spawn/minimap data
 
   // Ramp AABBs are metadata only; do not feed them into vehicle-stopping
   // collision. The highway mesh is elevated/curved visible geometry, while a
@@ -1119,12 +1238,16 @@ async function buildCity(seed) {
   for (const obj of scene.children) {
     if (obj === camera) continue;
     if (obj === ambientLight || obj === fillLight || obj === sunLight) continue;
-    if (obj.userData && (
-      obj.userData.isTerrain ||
-      obj.userData.isOcean  ||
-      obj.userData.isHighway  // already registered above
-    )) continue;
-    if (obj.userData && (obj.userData.isPlayerSprite || obj.userData.isNpcVehicle || obj.userData.isTargetMarker)) continue;
+    if (
+      obj.userData &&
+      (obj.userData.isTerrain || obj.userData.isOcean || obj.userData.isHighway) // already registered above
+    )
+      continue;
+    if (
+      obj.userData &&
+      (obj.userData.isPlayerSprite || obj.userData.isNpcVehicle || obj.userData.isTargetMarker)
+    )
+      continue;
     if (obj === rearCamera) continue;
     chunkManager.register(obj);
   }
@@ -1133,17 +1256,18 @@ async function buildCity(seed) {
   // freeway-side drop-offs use the same physical surface the player can see.
   const getPlayerSurface = (x, z, referenceY) => {
     const terrainY = terrainSystem.getTerrainY(x, z);
-    const highwaySurface = highwaySystem && typeof highwaySystem.sampleSurface === 'function'
-      ? highwaySystem.sampleSurface(x, z, referenceY)
-      : null;
+    const highwaySurface =
+      highwaySystem && typeof highwaySystem.sampleSurface === 'function'
+        ? highwaySystem.sampleSurface(x, z, referenceY)
+        : null;
     if (highwaySurface && highwaySurface.height >= terrainY) return highwaySurface;
     return terrainY;
   };
   vehicle.setTerrainQuery(getPlayerSurface);
 
-  aiCtx.navGrid        = navGrid;
-  aiCtx.buildingAABBs  = buildingAABBs;
-  aiCtx.buildingGrid   = buildingGrid;
+  aiCtx.navGrid = navGrid;
+  aiCtx.buildingAABBs = buildingAABBs;
+  aiCtx.buildingGrid = buildingGrid;
   aiCtx.interestPoints = city.interestPoints;
   aiCtx.spawnProjectile = makeSpawnProjectile(scene);
 
@@ -1173,7 +1297,7 @@ async function buildCity(seed) {
   overlay.textContent = 'Warming moot textures…';
   // Texture warmup must not block entering play; active moots use placeholders
   // until each texture finishes loading in the background.
-  population.loadTextures().catch(err => console.warn('[vxm] moot texture warmup failed', err));
+  population.loadTextures().catch((err) => console.warn('[vxm] moot texture warmup failed', err));
 
   // Boot population in ring around player (fire-and-forget — not async).
   population.boot(currentPlayerSpawn);
@@ -1181,14 +1305,14 @@ async function buildCity(seed) {
   // Spawn NPC vehicle fleet on road waypoints.
   npcVehiclePool = createNpcVehiclePool({ scene, navGrid });
 
-  game.charge     = GAME.startAmmo;
+  game.charge = GAME.startAmmo;
   game.capacitors = 0;
-  game.health     = 0;          // truck is invincible
-  game.state      = 'playing';
-  game.score      = 0;
-  game.timeRemaining    = TARGET.startTimeS;
-  game.targetCountdown  = TARGET.targetCountdownS;
-  game.combo      = 1;
+  game.health = 0; // truck is invincible
+  game.state = 'playing';
+  game.score = 0;
+  game.timeRemaining = TARGET.startTimeS;
+  game.targetCountdown = TARGET.targetCountdownS;
+  game.combo = 1;
   game.mootsAlive = POP_STANDING_COUNT;
   game.mootsTotal = POP_STANDING_COUNT;
 
@@ -1200,13 +1324,20 @@ async function buildCity(seed) {
   recorder.reset();
   impactSystem.clearImpacts();
 
-  isBuilding = false;  // release guard
+  isBuilding = false; // release guard
   overlay.classList.add('hidden');
   setGameOverVisible(false);
   setFace('neutral');
   updateHud(game);
   // Update minimap city layer now that bounds and road data are available.
-  if (minimap) minimap.buildCityLayer(city.bounds, city.roadSegments, city.buildingAABBs, highwayLayout, zoneMap);
+  if (minimap)
+    minimap.buildCityLayer(
+      city.bounds,
+      city.roadSegments,
+      city.buildingAABBs,
+      highwayLayout,
+      zoneMap,
+    );
   // Designate the first target.
   designateNewTarget();
 }
@@ -1244,7 +1375,9 @@ function restartCurrentRun() {
     navGrid,
     buildingAABBs,
   });
-  population.loadTextures().catch(err => console.warn('[vxm] moot texture warmup failed after restart', err));
+  population
+    .loadTextures()
+    .catch((err) => console.warn('[vxm] moot texture warmup failed after restart', err));
   population.boot(currentPlayerSpawn);
 
   if (npcVehiclePool) npcVehiclePool.destroyAll();
@@ -1254,7 +1387,8 @@ function restartCurrentRun() {
   game.mootsTotal = POP_STANDING_COUNT;
   recorder.reset();
   if (playback) playback = createPlayback(scene, vehicle);
-  if (!targetMarker) targetMarker = createTargetMarker(scene, { getTerrainY: terrainSystem.getTerrainY });
+  if (!targetMarker)
+    targetMarker = createTargetMarker(scene, { getTerrainY: terrainSystem.getTerrainY });
 
   setFace('neutral');
   updateHud(game);
@@ -1266,7 +1400,6 @@ const POP_STANDING_COUNT = 60;
 
 // startNextLevel removed — no boss, no level transitions.
 
-
 /** Remove all city-generated Mesh/Group children from the scene.
  * Disposes geometry and materials on all Mesh descendants to free GPU memory.
  * Pistol is parented to camera (userData.isPistol=true) — not touched.
@@ -1277,19 +1410,21 @@ function _clearCityMeshes() {
   const toRemove = [];
   for (const obj of scene.children) {
     if (obj === camera || obj === rearCamera || obj.isLight) continue;
-    if (obj.userData && (
-      obj.userData.isPistol ||
-      obj.userData.isImpact ||
-      obj.userData.isBullet ||
-      obj.userData.isPlayerSprite ||
-      obj.userData.isNpcVehicle ||
-      obj.userData.isTargetMarker ||
-      obj.userData.isTerrain ||
-      obj.userData.isOcean ||
-      obj.userData.isHighway ||
-      obj.userData.isParksAsset ||
-      obj.userData.isBuildingInstanced
-    )) continue;
+    if (
+      obj.userData &&
+      (obj.userData.isPistol ||
+        obj.userData.isImpact ||
+        obj.userData.isBullet ||
+        obj.userData.isPlayerSprite ||
+        obj.userData.isNpcVehicle ||
+        obj.userData.isTargetMarker ||
+        obj.userData.isTerrain ||
+        obj.userData.isOcean ||
+        obj.userData.isHighway ||
+        obj.userData.isParksAsset ||
+        obj.userData.isBuildingInstanced)
+    )
+      continue;
     toRemove.push(obj);
   }
   for (const o of toRemove) {
@@ -1336,10 +1471,10 @@ async function main() {
   db = dbResult;
 
   // Seed from URL param, else CITY default seed.
-  const urlSeed = parseInt(new URLSearchParams(location.search).get('seed') || '0', 10);
+  const urlSeed = Number.parseInt(new URLSearchParams(location.search).get('seed') || '0', 10);
   const initialSeed = urlSeed || CITY.seed;
 
-  levelManager = createLevelManager(initialSeed);
+  _levelManager = createLevelManager(initialSeed);
 
   // Create HUD components.
   createHud();
@@ -1351,7 +1486,7 @@ async function main() {
   setupRearview();
 
   // Create minimap (replaces old radar).
-  minimap  = createMinimap();
+  minimap = createMinimap();
   // No boss portrait.
 
   // Create radio. Discover music files asynchronously; playback starts on the
@@ -1365,13 +1500,27 @@ async function main() {
   playback = createPlayback(scene, vehicle);
 
   window.__vxm = {
-    scene, camera, renderer, vehicle, pistol, game,
-    recorder, playback,
-    get diagnostics() { return getVisibilityDiagnostics(); },
+    scene,
+    camera,
+    renderer,
+    vehicle,
+    pistol,
+    game,
+    recorder,
+    playback,
+    get diagnostics() {
+      return getVisibilityDiagnostics();
+    },
     getVisibilityDiagnostics,
-    get mootHandles() { return population ? population.getHandles() : []; },
-    get population()  { return population; },
-    get navGrid()     { return navGrid; },
+    get mootHandles() {
+      return population ? population.getHandles() : [];
+    },
+    get population() {
+      return population;
+    },
+    get navGrid() {
+      return navGrid;
+    },
     // HUD slot helpers exposed so callers can manage image slots after createHud().
     registerHudSlot,
     setHudSlot,
@@ -1403,12 +1552,16 @@ function tickAI(dt) {
   // Prune stale recent-kill / recent-shot events (> 4 s old) using cursors.
   const staleKill = now - 4000;
   const staleShot = now - 2000;
-  while (aiCtx.recentKillsCursor < aiCtx.recentKills.length &&
-         aiCtx.recentKills[aiCtx.recentKillsCursor].at < staleKill) {
+  while (
+    aiCtx.recentKillsCursor < aiCtx.recentKills.length &&
+    aiCtx.recentKills[aiCtx.recentKillsCursor].at < staleKill
+  ) {
     aiCtx.recentKillsCursor++;
   }
-  while (aiCtx.recentShotsCursor < aiCtx.recentShots.length &&
-         aiCtx.recentShots[aiCtx.recentShotsCursor].at < staleShot) {
+  while (
+    aiCtx.recentShotsCursor < aiCtx.recentShots.length &&
+    aiCtx.recentShots[aiCtx.recentShotsCursor].at < staleShot
+  ) {
     aiCtx.recentShotsCursor++;
   }
   // Compact arrays once the cursor is deep enough to avoid unbounded growth.
@@ -1424,9 +1577,9 @@ function tickAI(dt) {
   // Update shared context (per-frame fields only — navGrid, buildingAABBs,
   // interestPoints and spawnProjectile are set once per city-build in buildCity).
   // truckPos is already updated above (in-place mutation of aiCtx.truckPos).
-  aiCtx.truckVelX  = truckVelX;
-  aiCtx.truckVelZ  = truckVelZ;
-  aiCtx.now        = now;
+  aiCtx.truckVelX = truckVelX;
+  aiCtx.truckVelZ = truckVelZ;
+  aiCtx.now = now;
 
   const handles = population.getHandles(true);
 
@@ -1469,13 +1622,7 @@ function tickAI(dt) {
   // Update minimap (replaces old radar).
   if (minimap) {
     const npcHandles = npcVehiclePool ? npcVehiclePool.getHandles() : [];
-    minimap.update(
-      truckPos, vehicle.yaw,
-      handles,
-      npcHandles,
-      game.targetHandle,
-      dt,
-    );
+    minimap.update(truckPos, vehicle.yaw, handles, npcHandles, game.targetHandle, dt);
   }
 
   // Tick NPC vehicles.
@@ -1532,7 +1679,7 @@ function tick(now) {
   }
 
   // ── Victory / gameover: only render, don't tick AI ───────────────────────
-  if (paused || PauseMenu.isOpen || (game.state !== 'playing')) {
+  if (paused || PauseMenu.isOpen || game.state !== 'playing') {
     Mouse.consumeClick();
     TouchInput.consumeTap();
     renderer.render(scene, camera);
@@ -1548,8 +1695,8 @@ function tick(now) {
   // Computed before vehicle.update so the speed cap is already correct this frame.
   {
     const wantBoost = Bindings.isAction('boost');
-    const hasAmmo   = game.charge > BOOST.minAmmo;
-    game.boosting   = wantBoost && hasAmmo;
+    const hasAmmo = game.charge > BOOST.minAmmo;
+    game.boosting = wantBoost && hasAmmo;
     if (game.boosting) {
       game.charge = Math.max(0, game.charge - BOOST.costPerSec * dt);
       // If draining to zero, immediately deactivate
@@ -1569,6 +1716,7 @@ function tick(now) {
 
   vehicle.update(dt, game);
   const preSpeed = Math.abs(vehicle.speed);
+  if (!noclip) resolveMapBounds(vehicle, cityBounds);
   const hit = noclip ? null : resolveBuildingCollisions(vehicle, buildingGrid ?? buildingAABBs);
 
   // Update chunk visibility based on player position.
@@ -1641,7 +1789,7 @@ function tick(now) {
   updateFlingMoots(dt, scene);
   updateHud(game);
   // Update directional arrow / target countdown HUD each frame.
-  if (game.targetHandle && game.targetHandle.group) {
+  if (game.targetHandle?.group) {
     updateTargetHud(game, camera, game.targetHandle.group.position);
   } else {
     updateTargetHud(game, camera, null);
@@ -1687,5 +1835,5 @@ window.addEventListener('keydown', (e) => {
 
 main().catch((err) => {
   console.error(err);
-  overlay.textContent = 'Error: ' + err.message;
+  overlay.textContent = `Error: ${err.message}`;
 });

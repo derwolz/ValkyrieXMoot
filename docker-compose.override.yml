@@ -1,0 +1,9 @@
+services:
+  web:
+    ports:
+      - "8090:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./main.js:/usr/share/nginx/html/main.js:ro
+      - ./lib:/usr/share/nginx/html/lib:ro
+      - ./data:/usr/share/nginx/html/data:ro

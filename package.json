@@ -1,0 +1,13 @@
+{
+  "name": "valkyriexmoot",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4"
+  },
+  "scripts": {
+    "lint": "biome check lib/ main.js tools/",
+    "lint:fix": "biome check --write lib/ main.js tools/",
+    "smoke": "node tools/smoke_integration.mjs"
+  }
+}

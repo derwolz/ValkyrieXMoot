@@ -23,24 +23,31 @@ const styles = {};
 const elements = {};
 
 // Very simple DOM mock
-function makeEl(tag) {
+function makeEl(_tag) {
   const el = {
     id: '',
     innerHTML: '',
     style: {},
     classList: {
       _classes: new Set(),
-      add(...cs) { cs.forEach(c => this._classes.add(c)); },
-      remove(...cs) { cs.forEach(c => this._classes.delete(c)); },
+      add(...cs) {
+        cs.forEach((c) => this._classes.add(c));
+      },
+      remove(...cs) {
+        cs.forEach((c) => this._classes.delete(c));
+      },
       toggle(c, force) {
         if (force === undefined) {
-          if (this._classes.has(c)) this._classes.delete(c); else this._classes.add(c);
+          if (this._classes.has(c)) this._classes.delete(c);
+          else this._classes.add(c);
         } else {
           force ? this._classes.add(c) : this._classes.delete(c);
         }
         return this._classes.has(c);
       },
-      has(c) { return this._classes.has(c); },
+      has(c) {
+        return this._classes.has(c);
+      },
     },
     parentNode: null,
     children: [],
@@ -48,15 +55,21 @@ function makeEl(tag) {
     src: '',
     href: '',
     onclick: null,
-    getAttribute(k) { return this[k] ?? null; },
-    setAttribute(k, v) { this[k] = v; },
+    getAttribute(k) {
+      return this[k] ?? null;
+    },
+    setAttribute(k, v) {
+      this[k] = v;
+    },
     querySelector(sel) {
       // parse by id
       const m = sel.match(/^#(.+)$/);
       if (m) return elements[m[1]] ?? null;
       return null;
     },
-    querySelectorAll(sel) { return []; },
+    querySelectorAll(_sel) {
+      return [];
+    },
     appendChild(child) {
       child.parentNode = this;
       this.children.push(child);
@@ -79,7 +92,9 @@ const document = {
     if (tag === 'div' || tag === 'img') el.tagName = tag.toUpperCase();
     return el;
   },
-  getElementById(id) { return elements[id] ?? null; },
+  getElementById(id) {
+    return elements[id] ?? null;
+  },
   head: {
     appendChild(child) {
       styles[child.id || Math.random()] = child;
@@ -97,24 +112,31 @@ const document = {
         // parse innerHTML for child ids via a regex
         if (el.innerHTML) {
           const re = /id="([^"]+)"/g;
-          let m;
-          while ((m = re.exec(el.innerHTML)) !== null) {
+          let m = re.exec(el.innerHTML);
+          while (m !== null) {
             const childEl = makeEl('div');
             childEl.id = m[1];
             childEl.style = {};
             childEl.classList = {
               _classes: new Set(),
-              add(...cs) { cs.forEach(c => this._classes.add(c)); },
-              remove(...cs) { cs.forEach(c => this._classes.delete(c)); },
+              add(...cs) {
+                cs.forEach((c) => this._classes.add(c));
+              },
+              remove(...cs) {
+                cs.forEach((c) => this._classes.delete(c));
+              },
               toggle(c, force) {
                 if (force === undefined) {
-                  if (this._classes.has(c)) this._classes.delete(c); else this._classes.add(c);
+                  if (this._classes.has(c)) this._classes.delete(c);
+                  else this._classes.add(c);
                 } else {
                   force ? this._classes.add(c) : this._classes.delete(c);
                 }
                 return this._classes.has(c);
               },
-              has(c) { return this._classes.has(c); },
+              has(c) {
+                return this._classes.has(c);
+              },
             };
             // Override querySelector to look up registered elements
             childEl.querySelector = (sel) => {
@@ -123,6 +145,7 @@ const document = {
               return null;
             };
             elements[m[1]] = childEl;
+            m = re.exec(el.innerHTML);
           }
         }
         child.parentNode = this;
@@ -181,10 +204,10 @@ function approxEq(a, b, eps = 0.001) {
 // ── Helper: build a mock boss handle ─────────────────────────────────────────
 function makeBossHandle(opts = {}) {
   return {
-    alive:     opts.alive ?? true,
-    isBoss:    true,
-    hp:        opts.hp ?? 100,
-    mootRow:   { display_name: opts.name ?? 'Boss McBossface', id: 'b1' },
+    alive: opts.alive ?? true,
+    isBoss: true,
+    hp: opts.hp ?? 100,
+    mootRow: { display_name: opts.name ?? 'Boss McBossface', id: 'b1' },
     avatarMat: {
       map: {
         image: { src: 'https://example.com/boss.png' },
@@ -284,7 +307,10 @@ test('boss name displayed from mootRow.display_name', () => {
   portrait.update(boss);
   const nameEl = document.getElementById('boss-name');
   assert(nameEl, 'boss-name element should exist');
-  assert(nameEl.textContent === 'BossyMcBossface', `expected 'BossyMcBossface', got '${nameEl.textContent}'`);
+  assert(
+    nameEl.textContent === 'BossyMcBossface',
+    `expected 'BossyMcBossface', got '${nameEl.textContent}'`,
+  );
   portrait.destroy();
 });
 
@@ -313,8 +339,8 @@ test('avatar img src not re-set on repeated update with same texture', () => {
   const boss = makeBossHandle();
   portrait.update(boss);
   const img = document.getElementById('boss-avatar-img');
-  img.src = '__sentinel__';   // change it manually to detect re-assignment
-  portrait.update(boss);      // same texture src, should not re-assign
+  img.src = '__sentinel__'; // change it manually to detect re-assignment
+  portrait.update(boss); // same texture src, should not re-assign
   assert(img.src === '__sentinel__', `src should not be re-set; got '${img.src}'`);
   portrait.destroy();
 });
@@ -343,20 +369,34 @@ function makeCanvasMock() {
     fillStyle: '',
     globalAlpha: 1,
     beginPath() {},
-    arc(x, y, r) { calls.push({ op: 'arc', x, y, r }); },
-    moveTo() {}, lineTo() {}, closePath() {},
-    fill() {}, stroke() {},
+    arc(x, y, r) {
+      calls.push({ op: 'arc', x, y, r });
+    },
+    moveTo() {},
+    lineTo() {},
+    closePath() {},
+    fill() {},
+    stroke() {},
   };
-  const body = {
-    appendChild(el) { el.parentNode = this; },
-    removeChild(el) { el.parentNode = null; },
+  const _body = {
+    appendChild(el) {
+      el.parentNode = this;
+    },
+    removeChild(el) {
+      el.parentNode = null;
+    },
   };
   const canvas = {
-    width: 0, height: 0,
+    width: 0,
+    height: 0,
     style: { cssText: '' },
     parentNode: null,
-    getContext() { return ctx; },
-    removeChild(c) { c.parentNode = null; },
+    getContext() {
+      return ctx;
+    },
+    removeChild(c) {
+      c.parentNode = null;
+    },
   };
   return { canvas, ctx };
 }
@@ -366,10 +406,15 @@ test('radar renders boss dot with radius 7 and regular dot with radius 3', () =>
   const realDoc = globalThis.document;
 
   // Patch document.body.appendChild to capture canvas
-  let capturedCanvas = null;
+  let _capturedCanvas = null;
   const mockBody1 = {
-    appendChild(el) { capturedCanvas = el; canvas.parentNode = this; },
-    removeChild(el) { el.parentNode = null; },
+    appendChild(el) {
+      _capturedCanvas = el;
+      canvas.parentNode = this;
+    },
+    removeChild(el) {
+      el.parentNode = null;
+    },
   };
   globalThis.document = {
     ...realDoc,
@@ -405,12 +450,18 @@ test('radar renders boss dot with radius 7 and regular dot with radius 3', () =>
   for (let i = 0; i < 4; i++) radar.update(truckPos, truckYaw, moots);
 
   // Look at arc calls — regular = radius 3, boss = radius 7
-  const arcCalls = ctx.calls.filter(c => c.op === 'arc');
-  const regularDot = arcCalls.find(c => c.r === 3);
-  const bossDot    = arcCalls.find(c => c.r === 7);
+  const arcCalls = ctx.calls.filter((c) => c.op === 'arc');
+  const regularDot = arcCalls.find((c) => c.r === 3);
+  const bossDot = arcCalls.find((c) => c.r === 7);
 
-  assert(regularDot, `expected an arc with radius 3 for regular moot; got arcs: ${JSON.stringify(arcCalls.map(c=>c.r))}`);
-  assert(bossDot,    `expected an arc with radius 7 for boss moot; got arcs: ${JSON.stringify(arcCalls.map(c=>c.r))}`);
+  assert(
+    regularDot,
+    `expected an arc with radius 3 for regular moot; got arcs: ${JSON.stringify(arcCalls.map((c) => c.r))}`,
+  );
+  assert(
+    bossDot,
+    `expected an arc with radius 7 for boss moot; got arcs: ${JSON.stringify(arcCalls.map((c) => c.r))}`,
+  );
 
   globalThis.document = realDoc;
   radar.destroy();
@@ -418,44 +469,54 @@ test('radar renders boss dot with radius 7 and regular dot with radius 3', () =>
 
 test('radar boss dot uses fillStyle #ff0000 or #ff6666 (flashing)', () => {
   const { canvas, ctx } = makeCanvasMock();
-  const fillStyles = [];
-  ctx.fill = function() {};
+  const _fillStyles = [];
+  ctx.fill = () => {};
 
   // Track fillStyle changes alongside arc calls
   const ops = [];
-  ctx.arc = (x, y, r) => ops.push({ op: 'arc', r });
-  const origFill = ctx.fill;
+  ctx.arc = (_x, _y, r) => ops.push({ op: 'arc', r });
+  const _origFill = ctx.fill;
   ctx.fill = () => {
-    const lastArc = [...ops].reverse().find(o => o.op === 'arc');
+    const lastArc = [...ops].reverse().find((o) => o.op === 'arc');
     if (lastArc) ops.push({ op: 'fill', r: lastArc.r, color: ctx.fillStyle });
   };
 
   const realDoc = globalThis.document;
   const mockBody2 = {
-    appendChild(el) { canvas.parentNode = this; },
-    removeChild(el) { el.parentNode = null; },
+    appendChild(_el) {
+      canvas.parentNode = this;
+    },
+    removeChild(el) {
+      el.parentNode = null;
+    },
   };
   globalThis.document = {
     ...realDoc,
-    createElement(tag) { return tag === 'canvas' ? canvas : realDoc.createElement(tag); },
+    createElement(tag) {
+      return tag === 'canvas' ? canvas : realDoc.createElement(tag);
+    },
     body: mockBody2,
   };
 
   const radar = radarSrc.createRadar();
 
-  const moots = [{
-    alive: true, isBoss: true, state: 'alarmed-armed',
-    hp: 50,
-    group: { position: { x: 2, z: 0 } },
-  }];
+  const moots = [
+    {
+      alive: true,
+      isBoss: true,
+      state: 'alarmed-armed',
+      hp: 50,
+      group: { position: { x: 2, z: 0 } },
+    },
+  ];
 
   for (let i = 0; i < 4; i++) radar.update({ x: 0, z: 0 }, 0, moots);
 
-  const bossFill = ops.find(o => o.op === 'fill' && o.r === 7);
+  const bossFill = ops.find((o) => o.op === 'fill' && o.r === 7);
   assert(bossFill, 'expected a fill op for radius-7 (boss) arc');
   assert(
     bossFill.color === '#ff0000' || bossFill.color === '#ff6666',
-    `boss dot color should be #ff0000 or #ff6666, got ${bossFill.color}`
+    `boss dot color should be #ff0000 or #ff6666, got ${bossFill.color}`,
   );
 
   globalThis.document = realDoc;
