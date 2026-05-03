@@ -496,6 +496,19 @@ console.log('\n[Test 2] findPath');
   const blocked =
     pathBlocked.length === 0 || Math.abs(pathBlocked[pathBlocked.length - 1].z - 30) > 5;
   assert('wall-divided path cannot reach goal', blocked);
+
+  // ── Test 3: directed road graph ───────────────────────────────────────────────
+  console.log('\n[Test 3] directed road graph');
+  {
+    const { buildRoadGraph, findRoadPath } = await import('../lib/nav/roadGraph.js');
+    const graph = buildRoadGraph([
+      { a: { x: 0, z: 0 }, b: { x: 10, z: 0 }, width: 4, kind: 'roundabout', oneWay: true },
+    ]);
+    const forward = findRoadPath(graph, { x: 0, z: 0 }, { x: 10, z: 0 });
+    const backward = findRoadPath(graph, { x: 10, z: 0 }, { x: 0, z: 0 });
+    assert('one-way segment routes forward', forward.length > 0);
+    assert('one-way segment blocks reverse route', backward.length === 0);
+  }
 }
 
 // ── Test 3: moveWithCollision ─────────────────────────────────────────────────
