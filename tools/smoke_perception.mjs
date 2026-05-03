@@ -39,8 +39,6 @@ const { tickPerception, hasLOS } = await import(
   pathToFileURL(resolve(root, 'lib/ai/perception.js'))
 );
 
-const { AI } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
-
 // ---------------------------------------------------------------------------
 // Test helpers
 // ---------------------------------------------------------------------------
@@ -88,7 +86,7 @@ const blockingAABB = [{ minX: 10, maxX: 20, minZ: -5, maxZ: 5 }];
 const noAABBs = [];
 
 const FAR_TRUCK = { x: 200, z: 200 }; // definitely far and no threat
-const NEAR_TRUCK_LOS = { x: 12, z: 0 }; // within 25 m with LOS
+const _NEAR_TRUCK_LOS = { x: 12, z: 0 }; // within 25 m with LOS
 
 function makeCtx({
   truckPos = FAR_TRUCK,
@@ -112,13 +110,19 @@ console.log('\nPhase 4 – Perception smoke tests\n');
 assert(hasLOS({ x: 0, z: 0 }, { x: 30, z: 0 }, noAABBs), 'hasLOS: clear path returns true');
 
 // 2. hasLOS returns false when building blocks the path.
-assert(!hasLOS({ x: 0, z: 0 }, { x: 30, z: 0 }, blockingAABB), 'hasLOS: blocked path returns false');
+assert(
+  !hasLOS({ x: 0, z: 0 }, { x: 30, z: 0 }, blockingAABB),
+  'hasLOS: blocked path returns false',
+);
 
 // 3. Boss moots are skipped.
 {
   const boss = makeMoot({ isBoss: true, state: 'unaware', threat: 0 });
   tickPerception(1.0, boss, makeCtx({ truckPos: { x: 3, z: 0 } }));
-  assert(boss.state === 'unaware' && boss.threat === 0, 'Boss moot skipped (state/threat unchanged)');
+  assert(
+    boss.state === 'unaware' && boss.threat === 0,
+    'Boss moot skipped (state/threat unchanged)',
+  );
 }
 
 // 4. Dead moots are skipped.
@@ -245,8 +249,8 @@ assert(!hasLOS({ x: 0, z: 0 }, { x: 30, z: 0 }, blockingAABB), 'hasLOS: blocked 
 // 19. State transition to alarmed-flee clears path and destination.
 {
   const moot = makeMoot({ threat: 0.45 });
-  moot.path        = [{ x: 10, z: 10 }];
-  moot.pathIndex   = 0;
+  moot.path = [{ x: 10, z: 10 }];
+  moot.pathIndex = 0;
   moot.destination = { x: 10, z: 10 };
   tickPerception(0.016, moot, makeCtx({ truckPos: { x: 3, z: 0 }, now: 1000 }));
   assert(

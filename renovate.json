@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "baseBranches": ["develop"],
+  "packageRules": [
+    { "matchDepTypes": ["devDependencies"], "automerge": true }
+  ],
+  "regexManagers": [
+    {
+      "fileMatch": ["Dockerfile"],
+      "matchStrings": ["FROM nginx:(?<currentValue>[\\d.]+-alpine)@sha256:[a-f0-9]+"],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "nginx",
+      "versioningTemplate": "docker"
+    }
+  ]
+}

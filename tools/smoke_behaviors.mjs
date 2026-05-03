@@ -19,12 +19,12 @@ globalThis.location = { search: '' };
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
-const { AI, MOOT, NAV } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
-const { buildNavGrid }    = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
-const { findPath }        = await import(pathToFileURL(resolve(root, 'lib/nav/pathfind.js')));
-const { pickFleeDest, tickFlee }   = await import(pathToFileURL(resolve(root, 'lib/ai/flee.js')));
-const { tickArmed }                 = await import(pathToFileURL(resolve(root, 'lib/ai/armed.js')));
-const { tickRecovery }              = await import(pathToFileURL(resolve(root, 'lib/ai/recovery.js')));
+const { AI } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
+const { findPath } = await import(pathToFileURL(resolve(root, 'lib/nav/pathfind.js')));
+const { pickFleeDest, tickFlee } = await import(pathToFileURL(resolve(root, 'lib/ai/flee.js')));
+const { tickArmed } = await import(pathToFileURL(resolve(root, 'lib/ai/armed.js')));
+const { tickRecovery } = await import(pathToFileURL(resolve(root, 'lib/ai/recovery.js')));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -40,17 +40,23 @@ function buildTestNavGrid() {
       interestPoints.push({ x, z, kind: 'sidewalk' });
     }
   }
-  return buildNavGrid({ bounds, buildingAABBs: [], roadSegments, intersections: [], interestPoints });
+  return buildNavGrid({
+    bounds,
+    buildingAABBs: [],
+    roadSegments,
+    intersections: [],
+    interestPoints,
+  });
 }
 
 function buildMoot(x = 50, z = 50, armed = false) {
   return {
-    group:   { position: { x, y: 0, z }, userData: {}, add() {} },
-    alive:   true,
-    state:   'alarmed-flee',
-    threat:  0.8,
-    path:    [],
-    pathIndex:  0,
+    group: { position: { x, y: 0, z }, userData: {}, add() {} },
+    alive: true,
+    state: 'alarmed-flee',
+    threat: 0.8,
+    path: [],
+    pathIndex: 0,
     destination: null,
     lastReplanAt: 0,
     lastSeenTruckAt: 0,
@@ -61,15 +67,16 @@ function buildMoot(x = 50, z = 50, armed = false) {
     armed,
     gunCooldown: 0,
     _alarmExitTimer: 0,
-    _recoveryTimer:  0,
-    _armedLosTimer:  0,
-    _glanceTimer:    0,
+    _recoveryTimer: 0,
+    _armedLosTimer: 0,
+    _glanceTimer: 0,
   };
 }
 
 // ── Test runner ───────────────────────────────────────────────────────────────
 
-let pass = 0, fail = 0;
+let pass = 0;
+let fail = 0;
 function test(name, fn) {
   try {
     fn();
@@ -87,7 +94,7 @@ function test(name, fn) {
 console.log('\n── Phase 5 Flee smoke tests ─────────────────────────────────────────────\n');
 
 test('pickFleeDest returns point in ring around moot', () => {
-  const mootPos  = { x: 50, z: 50 };
+  const mootPos = { x: 50, z: 50 };
   const truckPos = { x: 50, z: 50 }; // same spot for scoring test
   const pts = [];
   for (let x = 0; x <= 100; x += 2) for (let z = 0; z <= 100; z += 2) pts.push({ x, z });
@@ -95,13 +102,13 @@ test('pickFleeDest returns point in ring around moot', () => {
   assert.ok(dest !== null, 'should find a destination');
   const dx = dest.x - mootPos.x;
   const dz = dest.z - mootPos.z;
-  const d  = Math.sqrt(dx*dx + dz*dz);
+  const d = Math.sqrt(dx * dx + dz * dz);
   assert.ok(d >= AI.fleeSampleRingMin, `dist ${d.toFixed(1)} should be >= ${AI.fleeSampleRingMin}`);
   assert.ok(d <= AI.fleeSampleRingMax, `dist ${d.toFixed(1)} should be <= ${AI.fleeSampleRingMax}`);
 });
 
 test('pickFleeDest prefers points far from truck', () => {
-  const mootPos  = { x: 50, z: 50 };
+  const mootPos = { x: 50, z: 50 };
   const truckPos = { x: 20, z: 50 }; // truck on the left
   // Only two candidates: one on same side as truck, one opposite
   const pts = [
@@ -113,7 +120,7 @@ test('pickFleeDest prefers points far from truck', () => {
   const results = [];
   for (let i = 0; i < 20; i++) results.push(pickFleeDest(mootPos, truckPos, pts));
   // The far point should score higher and be selected more often.
-  const countFar = results.filter(r => r && r.x === 80).length;
+  const countFar = results.filter((r) => r && r.x === 80).length;
   assert.ok(countFar > 0, 'far point should be selected at least once out of 20');
 });
 
@@ -129,11 +136,11 @@ test('tickFlee moves moot away from starting position', () => {
   const ctx = { navGrid: grid, buildingAABBs: [], truckPos, now: 0 };
 
   for (let i = 0; i < 60; i++) {
-    tickFlee(1/60, moot, { ...ctx, now: i * (1000/60) });
+    tickFlee(1 / 60, moot, { ...ctx, now: i * (1000 / 60) });
   }
   const dx = moot.group.position.x - 50;
   const dz = moot.group.position.z - 50;
-  const moved = Math.sqrt(dx*dx + dz*dz);
+  const moved = Math.sqrt(dx * dx + dz * dz);
   assert.ok(moved > 0.5, `moot should have moved (${moved.toFixed(2)} m)`);
 });
 
@@ -146,15 +153,22 @@ test('tickFlee moves at approximately AI.fleeSpeed', () => {
   moot.pathIndex = 0;
   moot.lastReplanAt = 9999; // prevent replan
 
-  const dt = 1/60;
+  const dt = 1 / 60;
   for (let i = 0; i < 30; i++) {
-    tickFlee(dt, moot, { navGrid: grid, buildingAABBs: [], truckPos: { x: 50, z: 50 }, now: 9999 * 1000 });
+    tickFlee(dt, moot, {
+      navGrid: grid,
+      buildingAABBs: [],
+      truckPos: { x: 50, z: 50 },
+      now: 9999 * 1000,
+    });
   }
   const moved = Math.abs(moot.group.position.x - 50);
   const elapsed = dt * 30;
   const maxExpected = AI.fleeSpeed * elapsed * 1.2;
-  assert.ok(moved <= maxExpected || moved > 0.3,
-    `moved ${moved.toFixed(2)} m in ${elapsed.toFixed(2)}s (max ~${maxExpected.toFixed(2)})`);
+  assert.ok(
+    moved <= maxExpected || moved > 0.3,
+    `moved ${moved.toFixed(2)} m in ${elapsed.toFixed(2)}s (max ~${maxExpected.toFixed(2)})`,
+  );
 });
 
 test('tickFlee does nothing when dead', () => {
@@ -164,7 +178,13 @@ test('tickFlee does nothing when dead', () => {
   moot.destination = { x: 10, z: 50 };
   moot.path = findPath(grid, { x: 50, z: 50 }, { x: 10, z: 50 });
   moot.pathIndex = 0;
-  for (let i = 0; i < 30; i++) tickFlee(1/60, moot, { navGrid: grid, buildingAABBs: [], truckPos: { x: 50, z: 50 }, now: 0 });
+  for (let i = 0; i < 30; i++)
+    tickFlee(1 / 60, moot, {
+      navGrid: grid,
+      buildingAABBs: [],
+      truckPos: { x: 50, z: 50 },
+      now: 0,
+    });
   assert.equal(moot.group.position.x, 50);
   assert.equal(moot.group.position.z, 50);
 });
@@ -268,7 +288,7 @@ test('tickRecovery moves moot toward nearest interest point', () => {
 
   const startX = moot.group.position.x;
   const startZ = moot.group.position.z;
-  for (let i = 0; i < 60; i++) tickRecovery(1/60, moot, ctx);
+  for (let i = 0; i < 60; i++) tickRecovery(1 / 60, moot, ctx);
   const moved = Math.hypot(moot.group.position.x - startX, moot.group.position.z - startZ);
   assert.ok(moved > 0.3, `recovering moot should move (moved ${moved.toFixed(2)} m)`);
 });
@@ -312,7 +332,7 @@ test('tickRecovery does nothing when dead', () => {
   moot.alive = false;
   moot.state = 'recovering';
   const ctx = { navGrid: grid, buildingAABBs: [], truckPos: { x: 0, z: 0 }, now: 0 };
-  for (let i = 0; i < 30; i++) tickRecovery(1/60, moot, ctx);
+  for (let i = 0; i < 30; i++) tickRecovery(1 / 60, moot, ctx);
   assert.equal(moot.group.position.x, 50);
   assert.equal(moot.group.position.z, 50);
 });

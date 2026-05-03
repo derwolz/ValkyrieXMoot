@@ -30,32 +30,43 @@ globalThis.location = { search: '' };
 globalThis.localStorage = (() => {
   const store = new Map();
   return {
-    getItem:    (k) => store.get(k) ?? null,
-    setItem:    (k, v) => store.set(k, v),
+    getItem: (k) => store.get(k) ?? null,
+    setItem: (k, v) => store.set(k, v),
     removeItem: (k) => store.delete(k),
   };
 })();
 
 // Stub setTimeout so we can fire it synchronously.
 let pendingTimers = [];
-globalThis.setTimeout = (fn, _ms) => { pendingTimers.push(fn); return 0; };
-function flushTimers() { pendingTimers.forEach(fn => fn()); pendingTimers = []; }
+globalThis.setTimeout = (fn, _ms) => {
+  pendingTimers.push(fn);
+  return 0;
+};
+function flushTimers() {
+  pendingTimers.forEach((fn) => fn());
+  pendingTimers = [];
+}
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
-const { GAME, BOSS, LEVEL }        = await import(pathToFileURL(resolve(root, 'lib/config.js')));
-const {
-  createLevelManager,
-  pickPlayerSpawn, pickBossSpawn, snapToWalkable, pickBossRow,
-} = await import(pathToFileURL(resolve(root, 'lib/game/levels.js')));
-const { buildNavGrid }              = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
+const { GAME, LEVEL } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { createLevelManager, pickPlayerSpawn, pickBossSpawn, snapToWalkable, pickBossRow } =
+  await import(pathToFileURL(resolve(root, 'lib/game/levels.js')));
+const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
 
 // ── Test runner ───────────────────────────────────────────────────────────────
 
-let pass = 0, fail = 0;
+let pass = 0;
+let fail = 0;
 function test(name, fn) {
-  try { fn(); console.log(`  ✓ ${name}`); pass++; }
-  catch (e) { console.error(`  ✗ ${name}\n    ${e.message}`); fail++; }
+  try {
+    fn();
+    console.log(`  ✓ ${name}`);
+    pass++;
+  } catch (e) {
+    console.error(`  ✗ ${name}\n    ${e.message}`);
+    fail++;
+  }
 }
 
 // ── Build a minimal nav grid for spawn-point tests ─────────────────────────
@@ -71,23 +82,13 @@ for (let x = 10; x <= 790; x += 10) {
     interestPoints.push({ x, z, kind: 'sidewalk' });
   }
 }
-const navGrid = buildNavGrid({ bounds, buildingAABBs: [], roadSegments, intersections: [], interestPoints });
-
-// ── State machine mock (no DOM or THREE) ──────────────────────────────────────
-
-function makeGameStateMock() {
-  // Minimal stubs so createGameState logic runs without THREE.
-  const hudCalls = [];
-  const game = {
-    state:      'playing',
-    charge:     50,
-    capacitors: 1,
-    health:     2,
-    mootsAlive: 0,
-    mootsTotal: 0,
-  };
-  return { game, hudCalls };
-}
+const navGrid = buildNavGrid({
+  bounds,
+  buildingAABBs: [],
+  roadSegments,
+  intersections: [],
+  interestPoints,
+});
 
 console.log('\n── Phase 9c Level / Victory smoke tests ─────────────────────────────────\n');
 
@@ -95,12 +96,11 @@ console.log('\n── Phase 9c Level / Victory smoke tests ───────
 test('pickPlayerSpawn returns point near a map edge', () => {
   const pt = pickPlayerSpawn(bounds, interestPoints);
   const edgeDist = LEVEL.bossSnapRadius;
-  const nearEdge = (
+  const nearEdge =
     pt.x <= bounds.minX + edgeDist ||
     pt.x >= bounds.maxX - edgeDist ||
     pt.z <= bounds.minZ + edgeDist ||
-    pt.z >= bounds.maxZ - edgeDist
-  );
+    pt.z >= bounds.maxZ - edgeDist;
   assert.ok(nearEdge, `spawn point ${JSON.stringify(pt)} is not near any map edge`);
 });
 
@@ -146,7 +146,7 @@ test('createLevelManager.nextSeed increments seed by 1', () => {
   const lm = createLevelManager(0xc1ce05ed);
   const initial = lm.currentSeed;
   const next = lm.nextSeed();
-  assert.equal(next, ((initial + 1) >>> 0));
+  assert.equal(next, (initial + 1) >>> 0);
   assert.equal(lm.currentSeed, next);
 });
 
@@ -176,9 +176,7 @@ test('recentBossRows is capped at LEVEL.bossRecentDepth', () => {
 
 // 10. pickBossRow avoids recent rows
 test('pickBossRow avoids recent boss rows when eligible pool exists', () => {
-  const db = [
-    { id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }, { id: 'e' },
-  ];
+  const db = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }, { id: 'e' }];
   const avoidsFn = (id) => id === 'a' || id === 'b';
   const row = pickBossRow(db, avoidsFn);
   assert.ok(!avoidsFn(String(row.id)), `picked avoided row ${row.id}`);
@@ -195,8 +193,12 @@ test('pickBossRow falls back to full db when all rows are avoided', () => {
 // 12. triggerVictory state transition (minimal game-object simulation)
 test('triggerVictory sets state to victory and resets health', () => {
   const game = {
-    state: 'playing', charge: 45, capacitors: 1, health: 1,
-    mootsAlive: 0, mootsTotal: 0,
+    state: 'playing',
+    charge: 45,
+    capacitors: 1,
+    health: 1,
+    mootsAlive: 0,
+    mootsTotal: 0,
   };
   const hudCalls = [];
   // Minimal closure mirroring state.js triggerVictory logic:
@@ -210,15 +212,21 @@ test('triggerVictory sets state to victory and resets health', () => {
   triggerVictory();
   assert.equal(game.state, 'victory');
   assert.equal(game.health, GAME.maxHealth);
-  assert.equal(game.charge, 45,  'charge should be preserved');
+  assert.equal(game.charge, 45, 'charge should be preserved');
   assert.equal(game.capacitors, 1, 'capacitors should be preserved');
   assert.ok(hudCalls.length > 0, 'HUD should have been updated');
 });
 
 // 13. triggerVictory is idempotent
 test('triggerVictory is idempotent — second call is ignored', () => {
-  const game = { state: 'playing', charge: 40, capacitors: 0, health: 2,
-                 mootsAlive: 0, mootsTotal: 0 };
+  const game = {
+    state: 'playing',
+    charge: 40,
+    capacitors: 0,
+    health: 2,
+    mootsAlive: 0,
+    mootsTotal: 0,
+  };
   function triggerVictory() {
     if (game.state === 'victory') return;
     game.state = 'victory';
@@ -233,10 +241,18 @@ test('triggerVictory is idempotent — second call is ignored', () => {
 
 // 14. onVictory callback receives charge + capacitors
 test('onVictory callback receives current charge and capacitors', () => {
-  const game = { state: 'playing', charge: 75, capacitors: 2, health: 1,
-                 mootsAlive: 0, mootsTotal: 0 };
+  const game = {
+    state: 'playing',
+    charge: 75,
+    capacitors: 2,
+    health: 1,
+    mootsAlive: 0,
+    mootsTotal: 0,
+  };
   let victoryPayload = null;
-  const onVictory = (payload) => { victoryPayload = payload; };
+  const onVictory = (payload) => {
+    victoryPayload = payload;
+  };
 
   function triggerVictory() {
     if (game.state === 'victory') return;

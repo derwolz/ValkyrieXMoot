@@ -16,7 +16,7 @@
 
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
-import { resolve }       from 'node:path';
+import { resolve } from 'node:path';
 
 // ── Stubs ─────────────────────────────────────────────────────────────────────
 
@@ -24,9 +24,9 @@ globalThis.location = { search: '' };
 
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
-const { AI, BOSS, MOOT, NAV }  = await import(pathToFileURL(resolve(root, 'lib/config.js')));
-const { buildNavGrid }          = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
-const { tickBoss }              = await import(pathToFileURL(resolve(root, 'lib/ai/boss.js')));
+const { BOSS } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
+const { tickBoss } = await import(pathToFileURL(resolve(root, 'lib/ai/boss.js')));
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -42,39 +42,46 @@ function buildTestNavGrid() {
       interestPoints.push({ x, z, kind: 'sidewalk' });
     }
   }
-  return buildNavGrid({ bounds, buildingAABBs: [], roadSegments, intersections: [], interestPoints });
+  return buildNavGrid({
+    bounds,
+    buildingAABBs: [],
+    roadSegments,
+    intersections: [],
+    interestPoints,
+  });
 }
 
 function buildBossMoot(x = 100, z = 100) {
   return {
-    group:            { position: { x, y: 0, z }, userData: {}, add() {} },
-    alive:            true,
-    state:            'alarmed-armed',
-    threat:           1,
-    path:             [],
-    pathIndex:        0,
-    destination:      null,
-    lastReplanAt:     0,
-    lastSeenTruckAt:  0,
-    stateEnteredAt:   0,
-    collisionRadius:  0.4,
-    hp:               BOSS.hp,
-    isBoss:           true,
-    armed:            true,
-    gunCooldown:      0,
-    bossAggro:        false,
-    bossMode:         null,
+    group: { position: { x, y: 0, z }, userData: {}, add() {} },
+    alive: true,
+    state: 'alarmed-armed',
+    threat: 1,
+    path: [],
+    pathIndex: 0,
+    destination: null,
+    lastReplanAt: 0,
+    lastSeenTruckAt: 0,
+    stateEnteredAt: 0,
+    collisionRadius: 0.4,
+    hp: BOSS.hp,
+    isBoss: true,
+    armed: true,
+    gunCooldown: 0,
+    bossAggro: false,
+    bossMode: null,
     bossLastKnownPos: null,
     _bossReplanTimer: 0,
-    _alarmExitTimer:  0,
-    _recoveryTimer:   0,
-    _armedLosTimer:   0,
+    _alarmExitTimer: 0,
+    _recoveryTimer: 0,
+    _armedLosTimer: 0,
   };
 }
 
 // ── Test runner ───────────────────────────────────────────────────────────────
 
-let pass = 0, fail = 0;
+let pass = 0;
+let fail = 0;
 function test(name, fn) {
   try {
     fn();
@@ -98,7 +105,13 @@ test('boss does not aggro when truck is beyond detectRadius', () => {
   const boss = buildBossMoot(100, 100);
   const truckPos = { x: 100, z: 100 + BOSS.detectRadius + 5 }; // beyond detect range
   const shots = [];
-  const ctx = { navGrid: grid, buildingAABBs: [], truckPos, now: 0, spawnProjectile: () => shots.push(1) };
+  const ctx = {
+    navGrid: grid,
+    buildingAABBs: [],
+    truckPos,
+    now: 0,
+    spawnProjectile: () => shots.push(1),
+  };
 
   tickBoss(0.016, boss, ctx);
   assert.equal(boss.bossAggro, false, 'boss should not aggro beyond detectRadius');
@@ -119,9 +132,15 @@ test('boss aggros permanently when truck enters detectRadius', () => {
 test('aggro is permanent once latched (truck moves away)', () => {
   const boss = buildBossMoot(100, 100);
   const closePos = { x: 100, z: 100 + BOSS.detectRadius - 5 };
-  const farPos   = { x: 100, z: 100 + BOSS.detectRadius + 50 };
+  const farPos = { x: 100, z: 100 + BOSS.detectRadius + 50 };
 
-  const ctx = { navGrid: grid, buildingAABBs: [], truckPos: closePos, now: 0, spawnProjectile: () => {} };
+  const ctx = {
+    navGrid: grid,
+    buildingAABBs: [],
+    truckPos: closePos,
+    now: 0,
+    spawnProjectile: () => {},
+  };
   tickBoss(0.016, boss, ctx);
   assert.equal(boss.bossAggro, true);
 
@@ -157,7 +176,7 @@ test('boss enters pursue mode when truck beyond engageRadius', () => {
 test('boss fires at truck in engage mode', () => {
   const boss = buildBossMoot(100, 100);
   boss.bossAggro = true;
-  boss.bossMode  = 'engage';
+  boss.bossMode = 'engage';
   boss.gunCooldown = 0; // ready to fire
   const truckPos = { x: 100, z: 100 + BOSS.kiteDistance }; // at kite distance
   const shots = [];
@@ -177,7 +196,7 @@ test('boss fires at truck in engage mode', () => {
 test('boss advances toward truck when beyond kiteDistance', () => {
   const boss = buildBossMoot(100, 100);
   boss.bossAggro = true;
-  boss.bossMode  = 'engage';
+  boss.bossMode = 'engage';
   boss.gunCooldown = 9999;
   // Truck at (100, 100 + kiteDistance + 10) — boss is 10 m too far
   const truckPos = { x: 100, z: 100 + BOSS.kiteDistance + 10 };
@@ -191,18 +210,21 @@ test('boss advances toward truck when beyond kiteDistance', () => {
 
   const startZ = boss.group.position.z;
   // Tick several frames
-  for (let i = 0; i < 30; i++) tickBoss(1/60, boss, ctx);
+  for (let i = 0; i < 30; i++) tickBoss(1 / 60, boss, ctx);
   const endZ = boss.group.position.z;
 
   // Boss should have moved toward truck (z increased)
-  assert.ok(endZ > startZ, `boss should advance toward truck (z: ${startZ.toFixed(2)} → ${endZ.toFixed(2)})`);
+  assert.ok(
+    endZ > startZ,
+    `boss should advance toward truck (z: ${startZ.toFixed(2)} → ${endZ.toFixed(2)})`,
+  );
 });
 
 // 8. Engage mode: boss retreats from truck when within kiteDistance
 test('boss retreats from truck when closer than kiteDistance', () => {
   const boss = buildBossMoot(100, 100);
   boss.bossAggro = true;
-  boss.bossMode  = 'engage';
+  boss.bossMode = 'engage';
   boss.gunCooldown = 9999;
   // Truck at (100, 102) — very close, far inside kiteDistance
   const truckPos = { x: 100, z: 102 };
@@ -215,18 +237,21 @@ test('boss retreats from truck when closer than kiteDistance', () => {
   };
 
   const startZ = boss.group.position.z;
-  for (let i = 0; i < 30; i++) tickBoss(1/60, boss, ctx);
+  for (let i = 0; i < 30; i++) tickBoss(1 / 60, boss, ctx);
   const endZ = boss.group.position.z;
 
   // Boss should have retreated away from truck (z decreased)
-  assert.ok(endZ < startZ, `boss should retreat from truck (z: ${startZ.toFixed(2)} → ${endZ.toFixed(2)})`);
+  assert.ok(
+    endZ < startZ,
+    `boss should retreat from truck (z: ${startZ.toFixed(2)} → ${endZ.toFixed(2)})`,
+  );
 });
 
 // 9. Pursue mode: boss assigns a path toward last known position
 test('boss builds a path in pursue mode', () => {
   const boss = buildBossMoot(100, 100);
   boss.bossAggro = true;
-  boss.bossMode  = 'pursue';
+  boss.bossMode = 'pursue';
   boss.bossLastKnownPos = { x: 50, z: 50 };
   boss._bossReplanTimer = 0; // force replan
 
@@ -257,10 +282,13 @@ test('boss moves toward last known position in pursue mode', () => {
   // Run many frames
   for (let i = 0; i < 120; i++) {
     boss.bossLastKnownPos = { x: 100, z: 150 }; // keep last known fixed
-    tickBoss(1/60, boss, { ...ctx, now: i * (1000/60) });
+    tickBoss(1 / 60, boss, { ...ctx, now: i * (1000 / 60) });
   }
   const endZ = boss.group.position.z;
-  assert.ok(endZ > startZ, `boss should move toward last known pos (z: ${startZ.toFixed(2)} → ${endZ.toFixed(2)})`);
+  assert.ok(
+    endZ > startZ,
+    `boss should move toward last known pos (z: ${startZ.toFixed(2)} → ${endZ.toFixed(2)})`,
+  );
 });
 
 // 11. Boss does nothing when dead
@@ -268,7 +296,7 @@ test('dead boss does not move or fire', () => {
   const boss = buildBossMoot(100, 100);
   boss.alive = false;
   boss.bossAggro = true;
-  boss.bossMode  = 'engage';
+  boss.bossMode = 'engage';
 
   const shots = [];
   const ctx = {
@@ -303,8 +331,11 @@ test('mode transitions are distance-based only (no LOS check)', () => {
   };
 
   tickBoss(0.016, boss, ctx);
-  assert.equal(boss.bossMode, 'engage',
-    'boss should enter engage mode based on distance alone regardless of LOS');
+  assert.equal(
+    boss.bossMode,
+    'engage',
+    'boss should enter engage mode based on distance alone regardless of LOS',
+  );
 });
 
 // ── Summary ───────────────────────────────────────────────────────────────────
