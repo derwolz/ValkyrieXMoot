@@ -12,43 +12,27 @@
  */
 
 import assert from 'node:assert/strict';
-import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 
 // ── Minimal THREE stub ────────────────────────────────────────────────────────
 
-const THREE = {
+const _THREE = {
   Group: class {
-    constructor() { this.position = { x: 0, y: 0, z: 0 }; this.userData = {}; }
+    constructor() {
+      this.position = { x: 0, y: 0, z: 0 };
+      this.userData = {};
+    }
     add() {}
   },
   Sprite: class {
-    constructor() { this.scale = { set() {} }; this.position = { x: 0, y: 0, z: 0, set() {} }; }
+    constructor() {
+      this.scale = { set() {} };
+      this.position = { x: 0, y: 0, z: 0, set() {} };
+    }
   },
-  SpriteMaterial: class { constructor() {} },
+  SpriteMaterial: class {},
 };
-
-// ── Module resolution with stubs ──────────────────────────────────────────────
-
-// We need to stub three and the nameTexture to keep things pure.
-// Use --experimental-vm-modules approach: register a loader instead.
-// For simplicity we mock at the file-level by injecting via dynamic import map.
-// Since we can't modify the Node loader here, we build small in-process stubs
-// using createRequire override patterns — but the cleanest approach for ESM is
-// to manually instantiate the functions we need, pulling source via readFileSync
-// and using a custom Module.
-
-// ── Alternative: construct helpers directly from source ───────────────────────
-//
-// Phase 3 introduces two files:
-//   lib/ai/ambient.js  — depends on lib/config.js, lib/nav/pathfind.js, lib/nav/collision.js
-//   lib/entities/moots.js — depends on THREE (stubbed), lib/config.js, etc.
-//
-// We'll load config, pathfind, collision natively (they are pure JS),
-// then hand-stub THREE for moots.js.
-
-import { readFileSync } from 'node:fs';
 
 // Path root — this script lives in ValkyrieXMoot/tools/ so root is one level up.
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
@@ -59,11 +43,9 @@ const root = resolve(new URL('.', import.meta.url).pathname, '..');
 // Provide a global stub.
 globalThis.location = { search: '' };
 
-const { AI, NAV, CITY, MOOT, CAR } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { AI } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 const { buildNavGrid } = await import(pathToFileURL(resolve(root, 'lib/nav/grid.js')));
 const { findPath } = await import(pathToFileURL(resolve(root, 'lib/nav/pathfind.js')));
-const { moveWithCollision } = await import(pathToFileURL(resolve(root, 'lib/nav/collision.js')));
-
 // ── Load ambient.js with THREE stub injected ──────────────────────────────────
 // ambient.js does not import THREE, so we can load it directly.
 const { tickUnaware, pickAmbientDest } = await import(
@@ -176,10 +158,20 @@ test('buildMoot handle contains all required AI fields', () => {
   // matches the expected schema by checking our stub matches the handle spec.
   const handle = buildStubHandle();
   const requiredFields = [
-    'state', 'threat', 'path', 'pathIndex', 'destination',
-    'lastReplanAt', 'lastSeenTruckAt', 'stateEnteredAt',
-    'collisionRadius', 'hp', 'isBoss',
-    '_alarmExitTimer', '_recoveryTimer', '_armedLosTimer',
+    'state',
+    'threat',
+    'path',
+    'pathIndex',
+    'destination',
+    'lastReplanAt',
+    'lastSeenTruckAt',
+    'stateEnteredAt',
+    'collisionRadius',
+    'hp',
+    'isBoss',
+    '_alarmExitTimer',
+    '_recoveryTimer',
+    '_armedLosTimer',
   ];
   for (const f of requiredFields) {
     assert.ok(f in handle, `handle missing field: ${f}`);
@@ -198,7 +190,7 @@ test('buildMoot handle contains all required AI fields', () => {
 test('tickUnaware assigns destination and path on first call', () => {
   const grid = buildTestNavGrid();
   const moot = buildStubHandle(50, 50);
-  const ctx  = { navGrid: grid, buildingAABBs: [], now: 0 };
+  const ctx = { navGrid: grid, buildingAABBs: [], now: 0 };
 
   assert.equal(moot.destination, null);
   assert.equal(moot.path.length, 0);
@@ -207,8 +199,10 @@ test('tickUnaware assigns destination and path on first call', () => {
 
   // After one tick the moot should have a destination and path.
   // (It might stay null if no interest points are in range, but our grid has many.)
-  assert.ok(moot.destination !== null || moot.path.length > 0 || true,
-    'destination should be set (or no points in range which is also ok)');
+  assert.ok(
+    moot.destination !== null || moot.path.length > 0 || true,
+    'destination should be set (or no points in range which is also ok)',
+  );
   // More rigorous: the grid has interest points at 10..90 in both axes,
   // placed at positions 30–100 away from (50,50), so at least some should match.
   assert.ok(moot.destination !== null, 'should find a destination in a 100x100 grid');
@@ -218,12 +212,12 @@ test('tickUnaware assigns destination and path on first call', () => {
 test('tickUnaware moves moot toward its destination', () => {
   const grid = buildTestNavGrid();
   const moot = buildStubHandle(50, 50);
-  const ctx  = { navGrid: grid, buildingAABBs: [], now: 0 };
+  const ctx = { navGrid: grid, buildingAABBs: [], now: 0 };
 
   // Prime the moot with a fixed destination to avoid randomness.
   moot.destination = { x: 90, z: 50 };
-  moot.path        = findPath(grid, { x: 50, z: 50 }, { x: 90, z: 50 });
-  moot.pathIndex   = 0;
+  moot.path = findPath(grid, { x: 50, z: 50 }, { x: 90, z: 50 });
+  moot.pathIndex = 0;
 
   const startX = moot.group.position.x;
 
@@ -238,11 +232,11 @@ test('tickUnaware moves moot toward its destination', () => {
 test('tickUnaware moves at approximately AI.walkSpeed', () => {
   const grid = buildTestNavGrid();
   const moot = buildStubHandle(50, 50);
-  const ctx  = { navGrid: grid, buildingAABBs: [], now: 0 };
+  const ctx = { navGrid: grid, buildingAABBs: [], now: 0 };
 
   moot.destination = { x: 90, z: 50 };
-  moot.path        = findPath(grid, { x: 50, z: 50 }, { x: 90, z: 50 });
-  moot.pathIndex   = 0;
+  moot.path = findPath(grid, { x: 50, z: 50 }, { x: 90, z: 50 });
+  moot.pathIndex = 0;
 
   // 5 seconds of movement.
   const dt = 0.05;
@@ -260,9 +254,11 @@ test('tickUnaware moves at approximately AI.walkSpeed', () => {
   );
   // Either the moot moved at ~walkSpeed, or it arrived and stopped at destination.
   const destDist = Math.sqrt((moot.group.position.x - 90) ** 2 + (moot.group.position.z - 50) ** 2);
-  const arrived  = destDist < 5;
-  assert.ok(moved >= expectedMin || arrived,
-    `moved only ${moved.toFixed(2)} m (expected >= ${expectedMin.toFixed(2)} m or arrived at dest)`);
+  const arrived = destDist < 5;
+  assert.ok(
+    moved >= expectedMin || arrived,
+    `moved only ${moved.toFixed(2)} m (expected >= ${expectedMin.toFixed(2)} m or arrived at dest)`,
+  );
 });
 
 // ── Test 7: dead moot is not moved ────────────────────────────────────────────
@@ -275,7 +271,7 @@ test('tickUnaware does nothing when moot.alive is false', () => {
   moot.pathIndex = 0;
   const ctx = { navGrid: grid, buildingAABBs: [], now: 0 };
 
-  for (let i = 0; i < 60; i++) tickUnaware(1/60, moot, ctx);
+  for (let i = 0; i < 60; i++) tickUnaware(1 / 60, moot, ctx);
 
   assert.equal(moot.group.position.x, 50, 'dead moot must not move');
   assert.equal(moot.group.position.z, 50, 'dead moot must not move');
@@ -285,7 +281,7 @@ test('tickUnaware does nothing when moot.alive is false', () => {
 test('on path completion tickUnaware picks a new destination', () => {
   const grid = buildTestNavGrid();
   const moot = buildStubHandle(50, 50);
-  const ctx  = { navGrid: grid, buildingAABBs: [], now: 0 };
+  const ctx = { navGrid: grid, buildingAABBs: [], now: 0 };
 
   // Teleport moot to destination so it "arrives" immediately on first tick.
   moot.group.position.x = 60;

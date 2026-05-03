@@ -7,27 +7,27 @@
 // ── DOM shims ──────────────────────────────────────────────────────────────
 
 const canvasDrawCalls = [];
-let lastCanvasStyle = '';
+const _lastCanvasStyle = '';
 
 const ctx2d = {
-  clearRect:     () => {},
-  strokeStyle:   '',
-  lineWidth:     0,
-  fillStyle:     '',
-  globalAlpha:   1,
-  beginPath:     () => {},
-  arc:           (...args) => canvasDrawCalls.push({ type: 'arc', args }),
-  stroke:        () => {},
-  fill:          () => {},
-  moveTo:        () => {},
-  lineTo:        () => {},
-  closePath:     () => {},
+  clearRect: () => {},
+  strokeStyle: '',
+  lineWidth: 0,
+  fillStyle: '',
+  globalAlpha: 1,
+  beginPath: () => {},
+  arc: (...args) => canvasDrawCalls.push({ type: 'arc', args }),
+  stroke: () => {},
+  fill: () => {},
+  moveTo: () => {},
+  lineTo: () => {},
+  closePath: () => {},
 };
 
 const mockCanvas = {
-  width:  0,
+  width: 0,
   height: 0,
-  style:  { cssText: '' },
+  style: { cssText: '' },
   getContext: () => ctx2d,
   parentNode: null,
 };
@@ -35,7 +35,11 @@ const mockCanvas = {
 let appendedElement = null;
 global.document = {
   createElement: () => mockCanvas,
-  body: { appendChild: (el) => { appendedElement = el; } },
+  body: {
+    appendChild: (el) => {
+      appendedElement = el;
+    },
+  },
 };
 
 global.performance = { now: () => Date.now() };
@@ -66,22 +70,20 @@ console.log('──────────────────────�
 
 // 1. createRadar mounts a canvas to the body.
 {
-  const radar = createRadar();
+  const _radar = createRadar();
   ok('createRadar appends canvas to document.body', appendedElement === mockCanvas);
 }
 
 // 2. Canvas has correct dimensions.
-{
-  ok('canvas width = 140', mockCanvas.width === 140);
-  ok('canvas height = 140', mockCanvas.height === 140);
-}
+ok('canvas width = 140', mockCanvas.width === 140);
+ok('canvas height = 140', mockCanvas.height === 140);
 
 // 3. CSS includes fixed positioning + bottom-right corner.
 {
   const css = mockCanvas.style.cssText;
   ok('position:fixed in CSS', css.includes('position:fixed'));
-  ok('bottom:16px in CSS',    css.includes('bottom:16px'));
-  ok('right:16px in CSS',     css.includes('right:16px'));
+  ok('bottom:16px in CSS', css.includes('bottom:16px'));
+  ok('right:16px in CSS', css.includes('right:16px'));
 }
 
 // 4. update() throttles: with FRAME_SKIP=4, frames 1–3 should not draw arcs.
@@ -92,19 +94,20 @@ console.log('──────────────────────�
 
   canvasDrawCalls.length = 0;
   radar.update(truckPos, 0, moots); // frame 1
-  ok('frame 1: no draw calls',  canvasDrawCalls.length === 0);
+  ok('frame 1: no draw calls', canvasDrawCalls.length === 0);
 
   radar.update(truckPos, 0, moots); // frame 2
-  ok('frame 2: no draw calls',  canvasDrawCalls.length === 0);
+  ok('frame 2: no draw calls', canvasDrawCalls.length === 0);
 
   radar.update(truckPos, 0, moots); // frame 3
-  ok('frame 3: no draw calls',  canvasDrawCalls.length === 0);
+  ok('frame 3: no draw calls', canvasDrawCalls.length === 0);
 
   radar.update(truckPos, 0, moots); // frame 4 — render!
-  ok('frame 4: draws arc (truck triangle arc does not happen, but beginPath/fill does)',
+  ok(
+    'frame 4: draws arc (truck triangle arc does not happen, but beginPath/fill does)',
     // At minimum the truck triangle is drawn; verify at least one fillStyle set
     // by checking we got through a render pass (no throw).
-    true // render didn't throw
+    true, // render didn't throw
   );
 }
 
@@ -144,7 +147,7 @@ console.log('──────────────────────�
   }
 
   // Check arc calls — near moot should have been drawn (arc call with small radius).
-  const arcCalls = canvasDrawCalls.filter(c => c.type === 'arc');
+  const arcCalls = canvasDrawCalls.filter((c) => c.type === 'arc');
   // truck triangle is not arc; moot dots are arc; truck is a moveTo+lineTo triangle.
   // So arcCalls should include the near moot's dot, not the far moot's.
   ok('near moot (10m) triggers arc draw', arcCalls.length >= 1);
@@ -171,9 +174,9 @@ console.log('──────────────────────�
   canvasDrawCalls.length = 0;
   radar2.update({ x: 0, z: 0 }, 0, [bossMoot]); // render frame
 
-  const arcCalls = canvasDrawCalls.filter(c => c.type === 'arc');
+  const arcCalls = canvasDrawCalls.filter((c) => c.type === 'arc');
   // There should be at least one arc with radius=7 (boss dot).
-  const hasBossArc = arcCalls.some(c => c.args[2] === 7);
+  const hasBossArc = arcCalls.some((c) => c.args[2] === 7);
   ok('boss moot drawn with radius 7', hasBossArc);
 }
 
@@ -192,9 +195,9 @@ console.log('──────────────────────�
   canvasDrawCalls.length = 0;
   radar3.update({ x: 0, z: 0 }, 0, [deadMoot]); // render frame
 
-  const arcCalls = canvasDrawCalls.filter(c => c.type === 'arc');
+  const arcCalls = canvasDrawCalls.filter((c) => c.type === 'arc');
   // Only radar ring arc (radius ≈ 69px = cx-1 = 70-1), no moot dot arc at r=3.
-  const hasMootArc = arcCalls.some(c => c.args[2] === 3);
+  const hasMootArc = arcCalls.some((c) => c.args[2] === 3);
   ok('dead moot is not drawn', !hasMootArc);
 }
 
@@ -203,7 +206,9 @@ console.log('──────────────────────�
   const radar4 = createRadar();
   let removed = false;
   mockCanvas.parentNode = {
-    removeChild: (el) => { removed = (el === mockCanvas); },
+    removeChild: (el) => {
+      removed = el === mockCanvas;
+    },
   };
   radar4.destroy();
   ok('destroy() removes canvas from parent', removed);

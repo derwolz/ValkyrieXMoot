@@ -15,7 +15,7 @@
 
 import assert from 'node:assert/strict';
 import { pathToFileURL } from 'node:url';
-import { resolve }       from 'node:path';
+import { resolve } from 'node:path';
 
 // ── Stubs ─────────────────────────────────────────────────────────────────────
 
@@ -24,7 +24,11 @@ globalThis.location = { search: '' };
 // THREE.js stub — population.js uses only Color + Group-level scene.add/remove
 globalThis.THREE = {
   Color: class Color {
-    constructor(r, g, b) { this.r = r; this.g = g; this.b = b; }
+    constructor(r, g, b) {
+      this.r = r;
+      this.g = g;
+      this.b = b;
+    }
   },
 };
 
@@ -32,29 +36,55 @@ globalThis.THREE = {
 const root = resolve(new URL('.', import.meta.url).pathname, '..');
 
 // Import config first (needs location stub)
-const { POP, BOSS, MOOT, NAV } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
+const { POP, BOSS } = await import(pathToFileURL(resolve(root, 'lib/config.js')));
 
 // ── Minimal stubs for Three.js-dependent modules ──────────────────────────────
 
 // Stub THREE as a module
-const THREE_STUB = {
+const _THREE_STUB = {
   Group: class Group {
     constructor() {
-      this.position = { x: 0, y: 0, z: 0, set(x, y, z) { this.x = x; this.y = y; this.z = z; } };
-      this.scale    = { setScalar(s) { this._s = s; } };
+      this.position = {
+        x: 0,
+        y: 0,
+        z: 0,
+        set(x, y, z) {
+          this.x = x;
+          this.y = y;
+          this.z = z;
+        },
+      };
+      this.scale = {
+        setScalar(s) {
+          this._s = s;
+        },
+      };
       this.userData = {};
       this.children = [];
     }
-    add(o) { this.children.push(o); }
+    add(o) {
+      this.children.push(o);
+    }
   },
   Sprite: class Sprite {
-    constructor(mat) { this.material = mat; this.position = { y: 0 }; this.scale = { set() {} }; }
+    constructor(mat) {
+      this.material = mat;
+      this.position = { y: 0 };
+      this.scale = { set() {} };
+    }
   },
   SpriteMaterial: class SpriteMaterial {
-    constructor(opts = {}) { Object.assign(this, opts); this.needsUpdate = false; }
+    constructor(opts = {}) {
+      Object.assign(this, opts);
+      this.needsUpdate = false;
+    }
   },
   Color: class Color {
-    constructor(r, g, b) { this.r = r; this.g = g; this.b = b; }
+    constructor(r, g, b) {
+      this.r = r;
+      this.g = g;
+      this.b = b;
+    }
   },
 };
 
@@ -82,7 +112,7 @@ function buildTestInterestPoints(count = 200) {
   return pts;
 }
 
-const interestPoints = buildTestInterestPoints(400);
+const _interestPoints = buildTestInterestPoints(400);
 
 // ── Test the pure logic of the population manager ────────────────────────────
 
@@ -91,7 +121,8 @@ const interestPoints = buildTestInterestPoints(400);
 
 // ── Pure helper tests ─────────────────────────────────────────────────────────
 
-let pass = 0, fail = 0;
+let pass = 0;
+let fail = 0;
 function test(name, fn) {
   try {
     fn();
@@ -103,32 +134,20 @@ function test(name, fn) {
     fail++;
   }
 }
-async function testAsync(name, fn) {
-  try {
-    await fn();
-    console.log(`  ✓ ${name}`);
-    pass++;
-  } catch (e) {
-    console.error(`  ✗ ${name}`);
-    console.error('   ', e.message);
-    fail++;
-  }
-}
-
 console.log('\n── Phase 8 Population Manager smoke tests ────────────────────────────────\n');
 
 // 1. POP config sanity
 test('POP config has standing=60, despawnRadius=300', () => {
-  assert.equal(POP.standing,       60);
-  assert.equal(POP.despawnRadius,  300);
-  assert.ok(POP.spawnRingMin > 0,   'spawnRingMin should be positive');
+  assert.equal(POP.standing, 60);
+  assert.equal(POP.despawnRadius, 300);
+  assert.ok(POP.spawnRingMin > 0, 'spawnRingMin should be positive');
   assert.ok(POP.spawnRingMax > POP.spawnRingMin, 'spawnRingMax should exceed spawnRingMin');
-  assert.ok(POP.tickHz > 0,         'tickHz should be positive');
+  assert.ok(POP.tickHz > 0, 'tickHz should be positive');
 });
 
 // 2. BOSS config has hp=100, scale=1.5
 test('BOSS config has hp=100 and scale=1.5', () => {
-  assert.equal(BOSS.hp,    100);
+  assert.equal(BOSS.hp, 100);
   assert.equal(BOSS.scale, 1.5);
 });
 
@@ -161,68 +180,80 @@ test('moots beyond despawnRadius should be detected correctly', () => {
   const truckPos = { x: 0, z: 0 };
   const despawnSq = POP.despawnRadius * POP.despawnRadius;
 
-  const far  = { x: POP.despawnRadius + 1, z: 0 };
+  const far = { x: POP.despawnRadius + 1, z: 0 };
   const near = { x: POP.despawnRadius - 1, z: 0 };
 
-  const dSqFar  = (far.x - truckPos.x) ** 2 + (far.z - truckPos.z) ** 2;
+  const dSqFar = (far.x - truckPos.x) ** 2 + (far.z - truckPos.z) ** 2;
   const dSqNear = (near.x - truckPos.x) ** 2 + (near.z - truckPos.z) ** 2;
 
-  assert.ok(dSqFar  > despawnSq, 'far moot should be beyond despawnRadius');
+  assert.ok(dSqFar > despawnSq, 'far moot should be beyond despawnRadius');
   assert.ok(dSqNear < despawnSq, 'near moot should be within despawnRadius');
 });
 
 // 5. resetHandleState sanity
 test('resetHandleState clears all AI fields', () => {
   const handle = {
-    alive: false, state: 'alarmed-flee', threat: 0.8, path: [1, 2], pathIndex: 3,
-    destination: { x: 1, z: 2 }, lastReplanAt: 999, lastSeenTruckAt: 500,
-    stateEnteredAt: 100, gunCooldown: 5, _alarmExitTimer: 3, _recoveryTimer: 2,
-    _armedLosTimer: 1, bossAggro: true, bossMode: 'engage',
-    bossLastKnownPos: { x: 1, z: 2 }, _bossReplanTimer: 99,
+    alive: false,
+    state: 'alarmed-flee',
+    threat: 0.8,
+    path: [1, 2],
+    pathIndex: 3,
+    destination: { x: 1, z: 2 },
+    lastReplanAt: 999,
+    lastSeenTruckAt: 500,
+    stateEnteredAt: 100,
+    gunCooldown: 5,
+    _alarmExitTimer: 3,
+    _recoveryTimer: 2,
+    _armedLosTimer: 1,
+    bossAggro: true,
+    bossMode: 'engage',
+    bossLastKnownPos: { x: 1, z: 2 },
+    _bossReplanTimer: 99,
     avatarMat: { map: null, needsUpdate: false },
   };
 
   // Mirror resetHandleState logic
-  handle.alive           = true;
-  handle.state           = 'unaware';
-  handle.threat          = 0;
-  handle.path            = [];
-  handle.pathIndex       = 0;
-  handle.destination     = null;
-  handle.lastReplanAt    = 0;
+  handle.alive = true;
+  handle.state = 'unaware';
+  handle.threat = 0;
+  handle.path = [];
+  handle.pathIndex = 0;
+  handle.destination = null;
+  handle.lastReplanAt = 0;
   handle.lastSeenTruckAt = 0;
-  handle.stateEnteredAt  = 0;
-  handle.gunCooldown     = 0;
-  handle._alarmExitTimer  = 0;
-  handle._recoveryTimer   = 0;
-  handle._armedLosTimer   = 0;
-  handle.bossAggro        = false;
-  handle.bossMode         = null;
+  handle.stateEnteredAt = 0;
+  handle.gunCooldown = 0;
+  handle._alarmExitTimer = 0;
+  handle._recoveryTimer = 0;
+  handle._armedLosTimer = 0;
+  handle.bossAggro = false;
+  handle.bossMode = null;
   handle.bossLastKnownPos = null;
   handle._bossReplanTimer = 0;
 
-  assert.equal(handle.alive,   true);
-  assert.equal(handle.state,   'unaware');
-  assert.equal(handle.threat,  0);
+  assert.equal(handle.alive, true);
+  assert.equal(handle.state, 'unaware');
+  assert.equal(handle.threat, 0);
   assert.deepEqual(handle.path, []);
   assert.equal(handle.destination, null);
-  assert.equal(handle.bossAggro,   false);
-  assert.equal(handle.bossMode,    null);
+  assert.equal(handle.bossAggro, false);
+  assert.equal(handle.bossMode, null);
 });
 
 // 6. Boss properties
 test('boss handle should have hp=BOSS.hp, isBoss=true, armed=true', () => {
   const handle = {
-    isBoss:    true,
-    armed:     true,
-    hp:        BOSS.hp,
+    isBoss: true,
+    armed: true,
+    hp: BOSS.hp,
     bossAggro: false,
-    bossMode:  null,
-    alive:     true,
+    bossMode: null,
+    alive: true,
   };
-  assert.equal(handle.isBoss,    true);
-  assert.equal(handle.armed,     true);
-  assert.equal(handle.hp,        100);
+  assert.equal(handle.isBoss, true);
+  assert.equal(handle.armed, true);
+  assert.equal(handle.hp, 100);
   assert.equal(handle.bossAggro, false);
 });
 
@@ -285,9 +316,11 @@ test('tick only runs at POP.tickHz cadence', () => {
     }
   }
   // Simulate 1 second at 60 fps
-  for (let i = 0; i < 60; i++) tick(1/60);
-  assert.ok(ticks >= POP.tickHz - 1 && ticks <= POP.tickHz + 1,
-    `expected ~${POP.tickHz} ticks per second, got ${ticks}`);
+  for (let i = 0; i < 60; i++) tick(1 / 60);
+  assert.ok(
+    ticks >= POP.tickHz - 1 && ticks <= POP.tickHz + 1,
+    `expected ~${POP.tickHz} ticks per second, got ${ticks}`,
+  );
 });
 
 // 12. getHandles includes boss + active regulars
@@ -300,7 +333,7 @@ test('getHandles returns regulars + boss when boss is alive', () => {
 
   function getHandles() {
     const result = [...activeRegulars];
-    if (bossHandle && bossHandle.alive) result.push(bossHandle);
+    if (bossHandle?.alive) result.push(bossHandle);
     return result;
   }
 
@@ -316,7 +349,7 @@ test('getHandles excludes dead boss', () => {
 
   function getHandles() {
     const result = [...activeRegulars];
-    if (bossHandle && bossHandle.alive) result.push(bossHandle);
+    if (bossHandle?.alive) result.push(bossHandle);
     return result;
   }
 
@@ -328,7 +361,7 @@ test('getHandles excludes dead boss', () => {
 // 14. freePool bookkeeping
 test('freePool grows on despawn, shrinks on spawn', () => {
   const freePool = [1, 2, 3, 4, 5]; // mock handles
-  const active   = new Set();
+  const active = new Set();
 
   // Spawn: pop from freePool, add to active
   function spawn() {
@@ -353,16 +386,32 @@ test('freePool grows on despawn, shrinks on spawn', () => {
 // 15. No geometry leaks: each handle is reused, not rebuilt
 test('same handle can be reused across spawn/despawn cycles', () => {
   const handle = {
-    group: { position: { x: 0, y: 0, z: 0, set(x, y, z) { this.x = x; this.y = y; this.z = z; } } },
-    alive: false, state: 'unaware',
+    group: {
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+        set(x, y, z) {
+          this.x = x;
+          this.y = y;
+          this.z = z;
+        },
+      },
+    },
+    alive: false,
+    state: 'unaware',
   };
-  const freePool   = [handle];
-  const active     = new Set();
-  let sceneAdds    = 0;
+  const freePool = [handle];
+  const active = new Set();
+  let sceneAdds = 0;
   let sceneRemoves = 0;
-  const scene      = {
-    add:    (g) => { sceneAdds++;    },
-    remove: (g) => { sceneRemoves++; },
+  const scene = {
+    add: (_g) => {
+      sceneAdds++;
+    },
+    remove: (_g) => {
+      sceneRemoves++;
+    },
   };
 
   // Spawn

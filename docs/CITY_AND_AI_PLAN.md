@@ -71,23 +71,47 @@ just `buildingAABBs` until Phase 1 lands.
 
 ## Phase 1 — Real city layout
 
-### Algorithm: perturbed grid + alley pass
+### Algorithm: perturbed grid + planned hierarchical organic roads + alley pass
 
-1. **Primary streets** — 4–7 × 4–7 arterial grid. Each grid line jittered ±15% in
-   position and ±10° in heading. Width 8–12 m.
-2. **Alley pass** — for every block longer than ~30 m, insert one alley parallel
+1. **Primary grid backbone** — deterministic perturbed grid lines remain the
+   block/plot scaffold and are tier-promoted into local, 2-lane, and 4-lane
+   roads. Zone sampling changes spacing so urban districts are tighter while
+   suburban/rural/park/shore edges breathe.
+2. **Planned organic hierarchy** — the former Voronoi street overlay is replaced
+   by intentional non-grid roads:
+   - **Waterfront collectors** follow the deterministic shoreline at an inland
+     offset so the city wraps around bays instead of treating water as a straight
+     map edge.
+   - **Circuit collectors** follow the inside of the elevated beltway at street
+     level, giving the highway a readable surface-road counterpart without
+     intersecting the reserved highway corridor.
+   - **Radial arterials** run inward from the circuit collector toward the city
+     core, with optional short waterfront spurs attempted where reservations
+     allow.
+   - **District local streets** use zone-scaled spacing/density: urban locals are
+     shorter/tighter, suburban locals are moderate, and rural locals are sparse.
+3. **Snapping and intersection control** — every planned road endpoint snaps to a
+   coarse grid, nearby existing nodes, or the retained grid backbone. New segment
+   crossings are rejected when they create cramped intersections or acute angles,
+   preventing the short wedge intersections produced by raw Voronoi bisectors.
+4. **Reservation filtering** — water and highway reservations are treated as hard
+   masks before roads, alleys, plots, boundary blockers, and nav cells are
+   accepted. Ramp feeder roads are explicit street-level segments so nav can keep
+   them walkable while the elevated highway remains reserved.
+5. **Alley pass** — for every block longer than ~30 m, insert one alley parallel
    to the long side at a 35–65% offset. Width 3–4 m.
-3. **Block extraction** — find closed polygons formed by the segment graph; each
-   polygon is a "block".
-4. **Plots** — BSP-split each block: pick the longest edge, split perpendicular
-   at 40–60%, recurse until area < threshold. One footprint per leaf, inset
-   0.5 m from plot edges. Random height 4–25 m.
-5. **Sidewalks** — 2 m strip along every road, snapped between road edge and
-   building setback line.
+6. **Block extraction** — find closed polygons formed by the grid scaffold; each
+   polygon is a "block" for plotting.
+7. **Plots** — BSP-split each block: pick the longest edge, split perpendicular
+   at 40–60%, recurse until area < threshold. One footprint per leaf, inset from
+   plot edges and filtered away from planned organic roads/reservations.
+8. **Sidewalks** — strips along every non-alley road plus organic-road sidewalk
+   strips/interest points, excluding beach, water, and highway reservation zones.
 
-**Why not Voronoi for streets**: produces wedge intersections, hard to tag
-alleys vs streets cleanly. Keep Voronoi as a Phase 7 option for *district*
-partitioning (different block-size / alley-density per district).
+**Voronoi usage**: Voronoi is no longer used to emit street segments. It remains
+appropriate for optional *district partitioning* (different block-size,
+alley-density, population, or building-height profiles) because district cells do
+not create the constant wedge intersections that Voronoi street edges did.
 
 **Why not full Citygen agent-based road growth yet**: 5× the code. Defer to
 Phase 7 if perturbed grid feels too regular.

@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-push:
+    name: Build & push to ghcr.io
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version from tag
+        id: version
+        run: echo "tag=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Build & push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          build-args: BUILD_TIME=${{ steps.version.outputs.tag }}
+          tags: |
+            ghcr.io/derwolz/valkyriexmoot:${{ steps.version.outputs.tag }}
+            ghcr.io/derwolz/valkyriexmoot:latest
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+
+  deploy:
+    name: Deploy to clankie
+    needs: build-push
+    runs-on: self-hosted
+    steps:
+      - name: Pull & restart
+        run: |
+          docker pull ghcr.io/derwolz/valkyriexmoot:latest
+          docker compose -f /opt/valkyriexmoot/docker-compose.yml pull
+          docker compose -f /opt/valkyriexmoot/docker-compose.yml up -d
