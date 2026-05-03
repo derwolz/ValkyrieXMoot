@@ -57,7 +57,7 @@ import { buildHighwayMesh } from './lib/world/highway/highwayMesh.js';
 import { buildParkAssets } from './lib/world/park/parkGenerator.js';
 import { createChunkManager } from './lib/world/chunks/chunkManager.js';
 import { loadAllVehicleTextures } from './lib/assets/vehicleTextures.js';
-import { createPlayerSprite } from './lib/car/playerSprite.js';
+import { createPlayerMesh } from './lib/car/playerMesh.js';
 import { createImpactSystem } from './lib/game/impacts.js';
 import { createGameState } from './lib/game/state.js';
 import {
@@ -1280,7 +1280,7 @@ async function buildCity(seed) {
   vehicle.setPositionYaw(currentPlayerSpawn.x, currentPlayerSpawn.z, 0);
 
   // Re-create player sprite for the new city.
-  playerSprite = createPlayerSprite(scene);
+  playerSprite = await createPlayerMesh(scene);
 
   // Re-create target marker.
   targetMarker = createTargetMarker(scene, { getTerrainY: terrainSystem.getTerrainY });
@@ -1660,7 +1660,7 @@ function tick(now) {
       } else {
         vehicle.update(dt, game);
         if (!noclip) resolveBuildingCollisions(vehicle, buildingGrid ?? buildingAABBs);
-        if (playerSprite) playerSprite.update(vehicle);
+        if (playerSprite) playerSprite.update(vehicle, dt);
         vehicle.applyChaseCamera(camera);
       }
 
@@ -1763,7 +1763,7 @@ function tick(now) {
 
   // Update player sprite position / frame (must happen before applyChaseCamera
   // so the sprite position is set before the camera moves to look at it).
-  if (playerSprite) playerSprite.update(vehicle);
+  if (playerSprite) playerSprite.update(vehicle, dt);
 
   // Third-person chase camera (after sprite update so lookAt is stable).
   vehicle.applyChaseCamera(camera);
