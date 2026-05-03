@@ -66,6 +66,7 @@ import {
   hydrateCityLayout,
   serializeCityLayout,
 } from './lib/world/city/generator.js';
+import { loadKits } from './lib/world/city/prefabs.js';
 import { createPopulation } from './lib/world/population.js';
 import { createMinimap } from './lib/hud/minimap.js';
 import { createTargetMarker } from './lib/entities/targetMarker.js';
@@ -1206,6 +1207,11 @@ async function buildCity(seed) {
   for (const m of highwaySystem.meshes) chunkManager.register(m);
 
   // ── Generate city from the precomputed layout (terrain-elevated meshes) ─────
+  overlay.textContent = 'Loading city kits...';
+  await loadKits(({ kit, loaded, total }) => {
+    overlay.textContent = `Loading ${kit} kit ${loaded} / ${total}...`;
+  });
+  overlay.textContent = 'Generating city...';
   const city = generateCity({
     scene,
     seed,
@@ -1429,7 +1435,7 @@ function _clearCityMeshes() {
   }
   for (const o of toRemove) {
     o.traverse((child) => {
-      if (child.isMesh) {
+      if (child.isMesh && !child.userData?.sharedAsset) {
         if (child.geometry) child.geometry.dispose();
         if (child.material) {
           if (Array.isArray(child.material)) {
